@@ -1,0 +1,31 @@
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Logs
+logs/
+*.log
+
+# Trained models
+models/*.zip
+
+# EnergyPlus simulation outputs
+eplusout.*
+*.eso
+*.mtr
+
+# System files
+.DS_Store
+Thumbs.db
