@@ -1,0 +1,17 @@
+{
+  "name": "EcoBuilding-MARL",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "options": ["--platform=linux/amd64"]
+  },
+  "remoteUser": "ubuntu",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-toolsai.jupyter"],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python"
+      }
+    }
+  }
+}

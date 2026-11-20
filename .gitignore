@@ -9,6 +9,7 @@ venv/
 .ipynb_checkpoints/
 
 # Secrets
+/.aws/
 .env
 .env.*
 !.env.example
@@ -21,7 +22,9 @@ logs/
 # Trained models
 models/*.zip
 
-# EnergyPlus simulation outputs
+# EnergyPlus and Sinergym simulation outputs
+/simulation-outputs/
+/demo-v1-res[0-9]*/
 eplusout.*
 *.eso
 *.mtr

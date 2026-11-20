@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!requirements.lock
+!requirements-build.lock
+!docker/
+!docker/check_versions.py
