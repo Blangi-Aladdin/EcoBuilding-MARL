@@ -27,25 +27,25 @@ while maintaining indoor thermal comfort.
 - Compare RL performance with rule-based control (RBC).
 - Extend the system toward multi-agent coordination.
 
-## Prérequis
+## requirement
 
-- PC Intel ou AMD 64 bits (`x86_64`), sous Windows 11 ou Ubuntu pris en charge par Docker Engine. Ubuntu 24.04 LTS convient au parcours Linux natif. L’image cible est `linux/amd64`.
-- Sous Windows, activez la virtualisation matérielle dans le BIOS/UEFI. Docker Desktop demande au moins 8 Go de RAM. Prévoyez plusieurs Go d’espace libre pour l’image et le cache de build sur les deux systèmes. [Prérequis Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
-- Prévoyez un accès au dépôt GitHub et une connexion Internet pour le premier build. Docker télécharge l’image de base, les paquets Ubuntu, EnergyPlus et les dépendances Python.
+- Intel PC or AMD 64-bit (`x86_64`), under Windows 11 or Ubuntu supported by Docker Engine. Ubuntu 24.04 LTS is suitable for native Linux use. The target image is `linux/amd64`.
+- On Windows, enable hardware virtualization in the BIOS/UEFI. Docker Desktop requires at least 8 GB of RAM. Allow several GB of free space for the image and build cache on both systems. [Docker Desktop Prerequisites](https://docs.docker.com/cairop/setup/install/windows-install/)
+- Provide access to the GitHub repository and an internet connection for the first build. Docker downloads the base image, Ubuntu packages, EnergyPlus and Python dependencies.
 
-L’image Ubuntu 24.04 installe Python, EnergyPlus, Sinergym, Gymnasium, Stable-Baselines3, PyTorch CPU et le noyau Jupyter. Aucune installation séparée de ces composants ni carte graphique dédiée n’est requise sur le PC.
+The image Ubuntu 24.04 installs Python, EnergyPlus, Sinergym, Gymnasium, Stable-Baselines3, PyTorch CPU and the Jupyter kernel. No separate installation of these components or dedicated graphics card is required on the PC.
 
-## Windows 11 avec WSL2
+## Windows 11 with WSL2
 
-### 1. Installer Ubuntu dans WSL2
+### 1. Install Ubuntu in WSL2
 
-Dans **PowerShell administrateur** :
+In **PowerShell administrateur** :
 
 ```powershell
 wsl --install -d Ubuntu
 ```
 
-Redémarrez si Windows le demande. Ouvrez **Ubuntu** depuis le menu Démarrer et créez votre compte Linux. Dans **PowerShell** :
+Restart if Windows requests it. Open **Ubuntu** from the Start menu and create your Linux account. In **PowerShell** :
 
 ```powershell
 wsl --update
@@ -53,7 +53,7 @@ wsl --version
 wsl -l -v
 ```
 
-La ligne `Ubuntu` doit afficher `2` dans la colonne `VERSION`. Si elle affiche `1`, exécutez `wsl --set-version Ubuntu 2`, puis relancez `wsl -l -v`. [Guide Microsoft WSL](https://learn.microsoft.com/windows/wsl/install)
+The `Ubuntu` line must display `2` in the `VERSION`column. If it displays `1`, run `wsl --set-version Ubuntu 2`, then rerun `wsl -l -v`. [Microsoft WSL Guide](https://learn.microsoft.com/windows/wsl/install)
 
 ### 2. Installer Docker Desktop
 
