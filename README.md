@@ -57,25 +57,25 @@ The `Ubuntu` line must display `2` in the `VERSION`column. If it displays `1`, r
 
 ### 2. Installer Docker Desktop
 
-Dans **PowerShell**, avec WinGet disponible :
+In **PowerShell**, with WinGet available:
 
 ```powershell
 winget install --id Docker.DockerDesktop --exact
 ```
 
-Vous pouvez aussi utiliser l’installateur officiel. Lancez Docker Desktop, sélectionnez le moteur WSL2 dans **Settings → General** si l’option est affichée, puis activez **Ubuntu** dans **Settings → Resources → WSL Integration** et appliquez les changements. Utilisez le mode conteneurs Linux. Docker Desktop fournit la commande `docker` à Ubuntu via cette intégration. [Installation Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/), [Intégration WSL2](https://docs.docker.com/desktop/features/wsl/)
+You can also use the official installer. Launch Docker Desktop, select the WSL2 engine in **Settings → General** if the option is displayed, then activate **Ubuntu** in **Settings → Resources → WSL Integration** and apply the changes. Use Linux container mode. Docker Desktop provides the `docker` command to Ubuntu via this integration. [Docker Desktop Installation](https://docs.docker.com/cairop/setup/install/windows-install/), [WSL2 Integration](https://docs.docker.com/cairop/features/wsl/)
 
-Dans le **terminal Ubuntu WSL** :
+In the **Ubuntu WSL* terminal** :
 
 ```bash
 docker version
 ```
 
-La commande doit afficher les sections **Client** et **Server**, avec un serveur Linux.
+The command must display the **Client** and **Server** sections, with a Linux server.
 
-### 3. Installer Git
+### 3. Install Git
 
-Dans le **terminal Ubuntu WSL** :
+In the **Ubuntu WSL* terminal** :
 
 ```bash
 sudo apt update
@@ -83,15 +83,15 @@ sudo apt install -y git
 git --version
 ```
 
-### 4. Installer VS Code
+### 4. Install VS Code
 
-Dans **PowerShell** :
+In **PowerShell** :
 
 ```powershell
 winget install --id Microsoft.VisualStudioCode --exact
 ```
 
-Ouvrez une nouvelle fenêtre **PowerShell** pour récupérer la commande `code`, puis installez les extensions :
+Open a new **PowerShell** window to retrieve the `code`command, then install the extensions:
 
 ```powershell
 code --install-extension ms-vscode-remote.remote-wsl
@@ -100,13 +100,13 @@ code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
 ```
 
-La configuration du dépôt installe également Python et Jupyter dans le conteneur. Poursuivez avec les [étapes communes](#cloner-construire-et-ouvrir-le-projet) depuis **Ubuntu WSL**.
+The repository configuration also installs Python and Jupyter into the container. Continue with the [common steps](#clone-build-and-open-the-project) from **Ubuntu WSL**.
 
-## Linux Ubuntu natif
+## Linux Ubuntu native
 
-### 1. Installer Docker Engine et Compose
+### 1. Install Docker Engine and Compose
 
-Dans le **terminal Ubuntu natif**, ajoutez le dépôt APT officiel de Docker sur une installation sans paquets Docker concurrents. Si Docker est déjà installé, vérifiez sa provenance et les conflits éventuels avant de changer d’installation. [Guide Docker Engine pour Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+In the **native Ubuntu terminal*, add the official APT repository of Docker on an installation without competing Docker packages. If Docker is already installed, check its origin and any conflicts before changing your installation. [Docker Engine Guide for Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 
 ```bash
 sudo apt update
@@ -129,37 +129,37 @@ sudo docker version
 docker compose version
 ```
 
-Vous devez voir un client et un serveur Docker, ainsi que la version du plugin Compose.
+You must see a Docker client and server, as well as the version of the Compose plugin.
 
-### 2. Autoriser l’accès à Docker pour VS Code
+### 2. Allow access to Docker for VS Code
 
-Sur un **poste personnel**, si la politique du poste le permet, ajoutez uniquement votre compte de confiance au groupe `docker` pour que Dev Containers puisse joindre le moteur :
+On a **personal workstation**, if the workstation’s policy allows it, add only your trusted account to the `docker` group so that Dev Containers can join the engine:
 
 ```bash
 sudo usermod -aG docker "$USER"
 ```
 
-Fermez entièrement votre session Ubuntu et reconnectez-vous avant de lancer VS Code. Puis vérifiez :
+Close your Ubuntu session completely and log in again before launching VS Code. Then check:
 
 ```bash
 id -nG
 docker version
 ```
 
-Le groupe `docker` confère des privilèges équivalents à `root`. Sur un poste partagé ou administré, demandez à l’administrateur un accès approuvé, par exemple un moteur rootless. Le parcours Dev Containers avec un moteur rootless reste à vérifier pour ce projet. Gardez les permissions du socket Docker en place et lancez VS Code avec votre compte utilisateur. [Permissions Docker](https://docs.docker.com/engine/install/linux-postinstall/), [Docker rootless](https://docs.docker.com/engine/security/rootless/)
+The group `docker` grants privileges equivalent to `root`. On a shared or administered workstation, ask the administrator for approved access, such as a rootless engine. The Dev Containers path with a rootless engine remains to be verified for this project. Keep the Docker socket permissions in place and launch VS Code with your user account. [Docker permissions](https://docs.docker.com/engine/install/linux-postinstall/), [Docker rootless](https://docs.docker.com/engine/security/rootless/)
 
-### 3. Installer Git
+### 3. Install Git
 
-Dans le **terminal Ubuntu natif** :
+In the **native Ubuntu terminal** :
 
 ```bash
 sudo apt install -y git
 git --version
 ```
 
-### 4. Installer VS Code
+### 4. Install VS Code
 
-Dans le **terminal Ubuntu natif**, avec Snap disponible :
+In the **native Ubuntu terminal**, with Snap available:
 
 ```bash
 sudo snap install --classic code
@@ -168,13 +168,13 @@ code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
 ```
 
-Le paquet officiel `.deb` est également disponible. Poursuivez avec les étapes communes depuis ce même terminal. [Installation de VS Code sous Linux](https://code.visualstudio.com/docs/setup/linux)
+The official `.deb` package is also available. Continue with the common steps from this same terminal. [Installing VS Code on Linux](https://code.visualstudio.com/docs/setup/linux)
 
-## Cloner, construire et ouvrir le projet
+## Clone, build, and open the project
 
-Exécutez les commandes suivantes dans le **terminal Ubuntu WSL** sous Windows ou dans le **terminal Ubuntu natif** sous Linux.
+Run the following commands in the **Ubuntu WSL* terminal* on Windows or in the **native Ubuntu terminal** on Linux.
 
-### 5. Cloner dans `~/projects`
+### 5. Clone in `~/projects`
 
 ```bash
 mkdir -p ~/projects
@@ -185,17 +185,17 @@ git branch --show-current
 ls -la Dockerfile .devcontainer/devcontainer.json requirements.lock requirements-build.lock
 ```
 
-Attendez-vous à voir la branche `main` et les quatre fichiers listés. Si le dépôt est privé, utilisez un compte GitHub autorisé. Si les fichiers Docker sont absents, vérifiez avec le groupe que la branche contenant la configuration a bien été partagée avant de lancer le build.
+Expect to see the `main` branch and all four files listed. If the repository is private, use an authorized GitHub account. If the Docker files are missing, check with the group that the branch containing the configuration has been shared before starting the build.
 
-### 6. Construire l’image
+### 6. Build the image
 
 ```bash
 docker build --platform linux/amd64 -t ecobuilding-marl:dev .
 ```
 
-Le build doit terminer avec l’image locale `ecobuilding-marl:dev`.
+The build must finish with the local image `ecobuilding-marl:dev`.
 
-### 7. Vérifier les versions
+### 7. Check versions
 
 ```bash
 docker image inspect ecobuilding-marl:dev --format '{{.Os}}/{{.Architecture}}'
@@ -203,21 +203,21 @@ docker run --rm ecobuilding-marl:dev python /opt/ecobuilding/check_versions.py
 docker run --rm ecobuilding-marl:dev python -m pip check
 ```
 
-Attendez-vous à voir `linux/amd64`, Python 3.12 (3.12.3 lors du test), EnergyPlus 25.1.0 (build `1c11a3d85f`), Sinergym 3.12.2, Gymnasium 1.2.3, Stable-Baselines3 2.7.1, PyTorch `2.9.1+cpu`, ipykernel 6.30.1 et `No broken requirements found.` Le script charge l’API EnergyPlus et vérifie la conversion NumPy–PyTorch sans lancer de simulation ni d’entraînement.
+Expect to see `linux/amd64`, Python 3.12 (3.12.3 during testing), EnergyPlus 25.1.0 (build `1c11a3d85f`), Sinergym 3.12.2, Gymnasium 1.2.3, Stable-Baselines3 2.7.1, PyTorch `2.9.1+cpu`, ipykernel 6.30.1, and `No broken requirements found. ` The script loads the EnergyPlus API and verifies the NumPy–PyTorch conversion without running any simulation or training.
 
-Pour obtenir un shell interactif avec le dépôt monté :
+To get an interactive shell with the mounted repository:
 
 ```bash
 docker run --rm -it --mount "type=bind,source=$PWD,target=/workspaces/EcoBuilding-MARL" ecobuilding-marl:dev
 ```
 
-### 8. Ouvrir le Dev Container
+### 8. Open the Dev Container
 
-Depuis le dossier cloné, exécutez `code .`. Sous Windows, la fenêtre doit d’abord indiquer **WSL: Ubuntu**. Dans la palette de commandes de VS Code, lancez **Dev Containers: Reopen in Container**. Attendez que la fenêtre indique qu’elle est connectée au conteneur. VS Code construit son conteneur depuis le même Dockerfile.
+From the cloned folder, run `code . `. On Windows, the window must first indicate **WSL: Ubuntu**. In the VS Code command palette, launch **Dev Containers: Reopen in Container**. Wait for the window to indicate that it is connected to the container. VS Code builds its container from the same Dockerfile.
 
-### 9. Vérifier Python et Jupyter
+### 9. Check Python and Jupyter
 
-Dans la palette, ouvrez **Python: Select Interpreter** et sélectionnez `/opt/venv/bin/python`. Dans le terminal intégré du conteneur, vérifiez :
+From the palette, open **Python: Select Interpreter** and select `/opt/venv/bin/python` In the container’s built-in terminal, verify:
 
 ```bash
 command -v python
@@ -225,15 +225,15 @@ python --version
 python -m jupyter kernelspec list
 ```
 
-Le résultat attendu est `/opt/venv/bin/python`, Python 3.12.x et un noyau `python3` dans `/opt/venv/share/jupyter/kernels`. Dans un notebook, choisissez **Select Kernel → Python Environments**, puis l’interpréteur du conteneur. Dans une cellule, exécutez `import sys; print(sys.executable)` et vérifiez que le résultat est `/opt/venv/bin/python`.
+The expected result is `/opt/venv/bin/python`, Python 3.12.x and a `python3` kernel in `/opt/venv/share/jupyter/kernels`. In a notebook, choose **Select Kernel → Python Environments**, then the container interpreter. In a cell, execute `import sys; print(sys.executable)` and verify that the output is `/opt/venv/bin/python`.
 
-## Validation sur un second ordinateur
+## Validation on a second computer
 
-L’image et les tests EnergyPlus, Sinergym et PPO ont été validés localement. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs.
+The EnergyPlus, Sinergym and PPO image and tests have been validated locally. On another workstation, it remains to confirm GitHub access with the account of a group member, build from a clean clone, Docker permissions under native Ubuntu, reopening in VS Code, and execution of the Jupyter cell. Validate both routes on their respective systems.
 
-## Sorties locales
+## Local outputs
 
-Lancez les simulations depuis `simulation-outputs/` à la racine du projet si vous souhaitez conserver les résultats sur le PC. Ce dossier et les répertoires générés par la démo `Eplus-demo-v1` sont ignorés par Git. Gardez les identifiants locaux hors du dépôt partagé.
+Launch the simulations from `simulation-outputs/` at the root of the project if you want to keep the results on the PC. This folder and the directories generated by the `Eplus-demo-v1` demo are ignored by Git. Keep local credentials out of the shared repository.
 
 ### Dependency updates
 
