@@ -12,10 +12,48 @@ Le modèle [office_1zone.epJSON](office_1zone.epJSON) cible EnergyPlus
 | Porte | Au nord, porte opaque en bois de **0,90 × 2,10 m** et **45 mm** d’épaisseur. Le bas de la porte est à **1 cm** de la dalle pour garder le contour dans la façade. |
 | Parois | Mur en maçonnerie de **200 mm** avec **100 mm** de laine minérale. Toiture en béton de **150 mm** avec **160 mm** de laine minérale. Dalle en béton de **150 mm** avec **80 mm** d’isolant rigide. |
 | Sol | Condition `Foundation` avec Kiva au pas de **15 minutes**. Les quatre côtés de la dalle sont exposés, soit **18 m**. |
-| Infiltration | **0,2 vol/h** en continu (12 m³/h au débit nominal). Aucun débit mécanique ni ouverture de fenêtre modélisés. |
-| Occupation | **Deux personnes**, **120 W/personne**, du lundi au vendredi de **08:00 à 18:00** en heure locale standard. Week-ends inoccupés. Aucun jour férié distinct, éclairage artificiel ou équipement de bureau n'est modélisé. |
-| Chauffage | Plinthe électrique convective, **2 kW** nominaux, rendement **1,0**. Consigne **21 °C** en occupation et **16 °C** hors occupation. Aucun refroidissement. |
-| Temps | Quatre pas de zone par heure. La période d’essai est le **27 janvier** avec un calendrier fixant ce jour au lundi pour exercer les deux consignes. |
+| Infiltration | **0,2 vol/h** en continu (12 m³/h), distincte de la ventilation mécanique équilibrée. La fenêtre est fixe. |
+| Occupation | **Deux personnes**, **120 W/personne**, du lundi au vendredi de **08:00 à 12:00** et de **13:00 à 18:00** en heure locale standard. Pause déjeuner de **12:00 à 13:00** et week-ends inoccupés. Aucun jour férié distinct, éclairage artificiel ou équipement de bureau n'est modélisé. |
+| Chauffage | Résistance électrique pilotable de **2 kW**, entièrement convective. Le chauffage est arrêté sans commande API. |
+| Refroidissement | DX à deux vitesses, **1,5 et 3,5 kW** nominaux, avec ventilateur cyclique et régulation sur charge. |
+| Temps | Quatre pas de zone par heure. Le modèle principal conserve le **27 janvier** comme période d’essai, avec un calendrier fixant ce jour au lundi. |
+
+## Profil d’occupation et pause déjeuner
+
+`Office occupants` conserve un effectif nominal de **deux personnes**.
+Le schedule `Office occupancy` fixe le profil suivant en semaine.
+
+| Intervalle, heure de début incluse | Fraction | Personnes | Pas de 15 min |
+| --- | ---: | ---: | ---: |
+| 00:00–08:00 | 0 | 0 | 32 |
+| 08:00–12:00 | 1 | 2 | 16 |
+| 12:00–13:00 | 0 | 0 | 4 |
+| 13:00–18:00 | 1 | 2 | 20 |
+| 18:00–24:00 | 0 | 0 | 24 |
+
+Les jours ouvrés comptent **36 pas occupés sur 96**. Les jours non ouvrés
+en comptent zéro. EnergyPlus horodate le CSV à la fin du pas. Par exemple,
+le premier pas de la pause commence à 12:00 et apparaît à **12:15**.
+L’occupation `Zone People Occupant Count`, clé `OFFICE`, a été relue
+via l’API Python et rapprochée du CSV.
+
+L’étape 36.4.2 a comparé le profil continu historique et le profil avec
+pause, avec sept jours d’historique identique et les mêmes actions HVAC.
+Pendant la pause, les apports sensibles, latents et la production de CO₂
+des occupants deviennent nuls. Sur l’heure de midi, la température
+moyenne passe de **12,14 à 11,59 °C** en hiver et de **25,28 à 25,12 °C**
+en été. Le CO₂ moyen diminue dans les deux essais. L’humidité relative
+moyenne baisse de **0,35 point** en hiver et augmente de **1,70 point**
+en été. Elle dépend aussi de la température, de la ventilation et du
+refroidissement. L’électricité journalière du DX diminue de **0,0147 kWh**
+dans l’essai estival. Les valeurs de cette comparaison sont propres aux
+actions et journées testées.
+
+Les trois niveaux Heating et ventilation et les trois actions DX ont été
+vérifiés pendant la pause dans leurs scénarios respectifs. Les commandes
+peuvent être maintenues lors des transitions d’occupation de 12:00 et
+13:00. Le diagnostic Cooling applique **25 °C** via le prototype de
+l’étape 36.4.1. Les horaires et consignes natifs du HVAC sont conservés.
 
 ## Infiltration et CO₂
 
@@ -27,14 +65,15 @@ le modèle, vaut **3,82 × 10⁻⁸ m³/(s·W)**, soit **4,584 mL/s par personne
 et **9,168 mL/s** au total en occupation. Le débit émis est nul hors
 occupation. [Référence EnergyPlus 25.1 sur les occupants](https://bigladdersoftware.com/epx/docs/25-1/input-output-reference/group-internal-gains-people-lights-other.html)
 
-Le renouvellement d’air se limite à l’infiltration constante. La zone
-suppose un air bien mélangé. L’indicateur CO₂ ne couvre pas les autres
+Sans commande de ventilation, le renouvellement d’air se limite à l’infiltration
+constante. La zone suppose un air bien mélangé. L’indicateur CO₂ ne couvre pas les autres
 polluants et ne suffit pas à attester la qualité de l’air du bureau.
 Les concentrations de début de journée dépendent du préchauffage du modèle
 et de son historique simulé. Les résultats de cette journée sont une
 comparaison de scénarios, sans extrapolation annuelle.
 
-L’essai du 27 janvier avec le même EPW a comparé **0,2 vol/h** à **0,5 vol/h**
+Avec la plinthe et le profil continu historique, l’essai du 27 janvier avec le même EPW
+a comparé **0,2 vol/h** à **0,5 vol/h**
 avec le même bilan CO₂. Le CSV de référence historique ne contenait pas
 cette variable. La référence réexécutée reproduit à chaque pas la
 température et l’énergie de chauffage de l’essai historique.
@@ -66,7 +105,7 @@ d’humidité relative causée par la température. Les copies ventilées
 rapportent également le débit mécanique à la densité de l’air extérieur.
 [Référence EnergyPlus 25.1 sur l’humidité de zone](https://bigladdersoftware.com/epx/docs/25-1/input-output-reference/group-thermal-zone-description-geometry.html)
 
-Le lundi 27 janvier, deux copies utilisent un apport et une extraction
+Lors des essais historiques avec la plinthe, le lundi 27 janvier, deux copies utilisent un apport et une extraction
 équilibrés de **40** et **60 m³/h**, actifs de **08:00 à 18:00**.
 L’infiltration de **0,2 vol/h** reste active en permanence. Ces essais
 intègrent l’effet thermique de l’air neuf. Ils ne comprennent ni
@@ -134,6 +173,106 @@ SHA-256 du fichier EPW :
 c3abc4cfd50efc65d6a7bdb7e35c3b7716489f803fc2135747833d6192e6725a
 ```
 
+## Chauffage électrique pilotable
+
+L’objet `ElectricEquipment` **`Office electric resistance`** apporte jusqu’à
+**2 000 W** à la zone Office. Les fractions latente, radiative et perdue
+valent zéro. La puissance électrique est intégralement transférée à l’air
+de la zone par convection. La sous-catégorie électrique est
+`Electric resistance heating`.
+
+La plinthe thermostatique historique a été retirée à l’étape 36.3.2.
+Ses essais restent des références pour l’ancienne configuration. Les
+essais de l’étape 36.3 ont montré qu’une fraction de disponibilité de la
+plinthe ne fixe pas une puissance. La résistance pilotable délivre la
+puissance demandée indépendamment de la charge thermostatique. Le
+thermostat double consigne reste présent pour le DX et les observations.
+
+L’actionneur API est `Schedule:Constant / Schedule Value / OFFICE HEATING POWER FRACTION`.
+Le schedule `Office heating power fraction` vaut **0 par défaut**.
+
+| Action | Niveau | Fraction | Puissance thermique et électrique | Électricité par 15 min |
+| --- | --- | ---: | ---: | ---: |
+| 0 | OFF | 0 | 0 W | 0 kWh |
+| 1 | MEDIUM | 0,5 | 1 000 W | 0,25 kWh |
+| 2 | HIGH | 1 | 2 000 W | 0,50 kWh |
+
+Envoyer explicitement `0` pour l’arrêt en mode piloté. Pour libérer
+l’actionneur, appeler `reset_actuator` après les relevés de fin du pas
+précédent, ou dans `callback_begin_zone_timestep_before_set_current_weather`
+au début du nouveau pas. Le calcul météo remet alors le schedule à sa
+valeur native **0**. Une libération plus tardive peut conserver la dernière
+valeur jusqu’au pas suivant. Pour un nouvel épisode, recréer l’état
+EnergyPlus et résoudre à nouveau les handles et callbacks.
+
+| Variable EnergyPlus, clé `OFFICE ELECTRIC RESISTANCE` | Unité | Rapport `Timestep` |
+| --- | --- | --- |
+| `Electric Equipment Electricity Energy` | J | Énergie du pas de zone |
+| `Electric Equipment Electricity Rate` | W | Puissance électrique |
+| `Electric Equipment Convective Heating Rate` | W | Puissance thermique convective |
+
+Lire l’énergie de la résistance **une fois en fin de pas de zone**. La
+valeur peut se répéter à plusieurs callbacks HVAC. Une autre méthode
+consiste à sommer la puissance multipliée par la durée réelle en secondes
+de chaque sous-pas. Les deux méthodes concordent avec le CSV sur les
+essais. Diviser par 3 600 000 pour obtenir des kWh.
+
+Les essais d’hiver et d’été ont vérifié l’arrêt par défaut, les
+transitions, les deux procédures de libération, le redémarrage après
+HIGH, les débits de ventilation et les combinaisons avec le DX.
+Chauffer et refroidir simultanément est techniquement possible. La
+résistance continue d’apporter la puissance demandée au-delà de la
+consigne de chauffage. La validation couvre les scénarios testés.
+
+## Commande Cooling indépendante de l’occupation
+
+Le DX conserve ses trois actions. En mode piloté, MEDIUM et HIGH
+appliquent une consigne configurable avant d’autoriser le groupe et
+de sélectionner sa vitesse. Les capacités sont nominales. La puissance
+thermique et le temps de fonctionnement dépendent de la charge, de la
+consigne, des courbes de performance et du cyclage.
+
+| Action | Niveau | Disponibilité | Vitesse | Consigne en mode piloté | Capacité nominale |
+| --- | --- | ---: | --- | --- | ---: |
+| 0 | OFF | 0 | Libérer la surcharge | Conserver l’état de la surcharge de consigne | 0 W |
+| 1 | MEDIUM | 1 | 1 | Appliquer la consigne configurée | 1 500 W |
+| 2 | HIGH | 1 | 2 | Appliquer la consigne configurée | 3 500 W |
+
+| Usage | Type de composant | Type de commande | Clé API |
+| --- | --- | --- | --- |
+| Disponibilité | `Schedule:Compact` | `Schedule Value` | `DX SCHEDULED AVAILABILITY` |
+| Vitesse | `Coil Speed Control` | `Unitary System DX Coil Speed Value` | `OFFICE DX UNIT` |
+| Consigne | `Schedule:Compact` | `Schedule Value` | `SUMMER COOLING SETPOINT` |
+
+La consigne en °C est un paramètre de l’environnement. Le prototype la
+valide au-dessus de la consigne Heating maximale du modèle (**21 °C**).
+**25 °C** est la référence expérimentale et **24 °C** une seconde valeur
+testée. Le choix d’une consigne définitive reste ouvert. La consigne
+configurée ne crée aucune action supplémentaire.
+
+Résoudre les handles après `api_data_fully_ready` pour chaque nouvel état.
+Appliquer l’action au début du pas de zone, avant l’initialisation du
+bilan thermique. OFF force la disponibilité à zéro et appelle
+`reset_actuator` sur la vitesse. Si une surcharge de consigne existe,
+elle reste active pendant OFF. Si OFF est la première action du mode
+piloté, le schedule de consigne suit encore son profil natif.
+Pour quitter le mode piloté, libérer les **trois** actionneurs après
+les relevés en fin de pas de zone, avant le calcul météo du pas suivant.
+Le profil natif reprend alors, y compris la disponibilité du DX
+en semaine de 08 h à 18 h et la consigne de 50 °C hors de cette plage.
+Après un épisode, supprimer les callbacks et l’état, puis résoudre les
+handles sur le nouvel état.
+
+Les essais à 24 et 25 °C ont démontré les transitions OFF, MEDIUM et
+HIGH avant 08 h, pendant l’occupation, après 18 h et le samedi simulé.
+OFF arrête effectivement le DX. Les deux vitesses ont produit du froid
+lorsque les conditions le permettaient. Les sept simulations de l’étape
+36.4.1 se sont terminées sans avertissement ni erreur sévère. Heating et
+ventilation ont conservé leurs puissances et débits commandés. La
+consigne configurable ne garantit pas une demande de froid à chaque
+pas. Le prototype reste expérimental et sa validation dans Sinergym reste
+à faire.
+
 ## Énergie de la ventilation équilibrée
 
 `Balanced outdoor air` utilise deux ventilateurs identiques dans
@@ -174,7 +313,7 @@ l’accumulateur à zéro. Diviser par 3 600 000 pour obtenir des kWh. Une
 lecture unique en fin de pas de zone ne couvre que le dernier sous-pas
 HVAC lorsque le moteur subdivise le pas.
 
-Pour un bilan par poste, additionner l’énergie électrique de la plinthe,
+Pour un bilan par poste, additionner l’énergie électrique de la résistance,
 celle de l’unité DX (ventilateur déjà inclus) et celle de la ventilation.
 Dans les CSV EnergyPlus, `Ventilation (simple):Fans:Electricity` recouvre
 la variable de ventilation, `Fans:Electricity` regroupe aussi le
@@ -182,7 +321,7 @@ ventilateur DX et `Electricity:Facility` inclut déjà ces postes. Utiliser
 ces compteurs pour le rapprochement, en comptant chaque poste une seule
 fois. Sur le build EnergyPlus 25.1.0 utilisé, le handle API de
 `Electricity:Facility` renvoie `-1` malgré sa présence dans l’inventaire.
-Le bilan global est vérifié avec `eplusmtr.csv`.
+Le bilan global est vérifié avec la colonne `Electricity:Facility` du CSV EnergyPlus.
 [Code source de la lecture des compteurs](https://github.com/NatLabRockies/EnergyPlus/blob/v25.1.0/src/EnergyPlus/api/datatransfer.cc#L362-L378)
 
 ## Validation
@@ -223,5 +362,5 @@ Examiner `eplusout.err` pour repérer les erreurs et avertissements, puis
 les horaires d’occupation, les consignes, le CO₂ en ppm et l’énergie
 électrique du chauffage en joules par pas (diviser par 3 600 000 pour
 obtenir des kWh).
-L’essai devra confirmer la lecture effective de la météo et montrer si
-la plinthe atteint la consigne lorsque sa puissance plafonne à 2 kW.
+Sans commande API, l’énergie de chauffage doit rester nulle et une
+baisse de la température hivernale est attendue.

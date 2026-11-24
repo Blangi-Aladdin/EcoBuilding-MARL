@@ -254,3 +254,12 @@ uv pip compile requirements-build.in --python-version 3.12 \
 The separate build lock pins setuptools and wheel for `tinynumpy`, which
 is distributed as a source archive. The image uses wheels for the other
 Python dependencies.
+
+## Validation du bureau monozone EnergyPlus
+
+Le code sous `src/ecobuilding/` fournit les commandes HVAC, l’occupation dynamique,
+les observations et le coordinateur des simulations. La validation s’exécute
+avec le modèle principal, l’EPW local et l’image `ecobuilding-marl:dev`.
+
+- [Architecture et conventions de mesure](docs/architecture.md)
+- [Reproduire les tests EnergyPlus](docs/validation.md)

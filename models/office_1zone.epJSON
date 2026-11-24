@@ -403,6 +403,10 @@
     "DX fan cycling": {
       "schedule_type_limits_name": "Fraction",
       "hourly_value": 0
+    },
+    "Office heating power fraction": {
+      "schedule_type_limits_name": "Fraction",
+      "hourly_value": 0
     }
   },
   "Schedule:Compact": {
@@ -417,6 +421,18 @@
         },
         {
           "field": "Until: 08:00"
+        },
+        {
+          "field": 0
+        },
+        {
+          "field": "Until: 12:00"
+        },
+        {
+          "field": 1
+        },
+        {
+          "field": "Until: 13:00"
         },
         {
           "field": 0
@@ -602,29 +618,15 @@
       "control_1_name": "Office dual setpoints"
     }
   },
-  "ZoneHVAC:Baseboard:Convective:Electric": {
-    "Electric baseboard": {
-      "availability_schedule_name": "Always on",
-      "heating_design_capacity_method": "HeatingDesignCapacity",
-      "heating_design_capacity": 2000,
-      "efficiency": 1
-    }
-  },
   "ZoneHVAC:EquipmentList": {
     "Office equipment": {
       "load_distribution_scheme": "SequentialLoad",
       "equipment": [
         {
-          "zone_equipment_object_type": "ZoneHVAC:Baseboard:Convective:Electric",
-          "zone_equipment_name": "Electric baseboard",
-          "zone_equipment_cooling_sequence": 2,
-          "zone_equipment_heating_or_no_load_sequence": 1
-        },
-        {
           "zone_equipment_object_type": "AirLoopHVAC:UnitarySystem",
           "zone_equipment_name": "Office DX unit",
           "zone_equipment_cooling_sequence": 1,
-          "zone_equipment_heating_or_no_load_sequence": 2
+          "zone_equipment_heating_or_no_load_sequence": 1
         }
       ]
     }
@@ -654,16 +656,6 @@
       "variable_name": "Zone People Occupant Count",
       "reporting_frequency": "Timestep"
     },
-    "Baseboard heating power": {
-      "key_value": "Electric baseboard",
-      "variable_name": "Baseboard Total Heating Rate",
-      "reporting_frequency": "Timestep"
-    },
-    "Baseboard electrical power": {
-      "key_value": "Electric baseboard",
-      "variable_name": "Baseboard Electricity Rate",
-      "reporting_frequency": "Timestep"
-    },
     "Office CO2": {
       "key_value": "Office",
       "variable_name": "Zone Air CO2 Concentration",
@@ -672,11 +664,6 @@
     "Office CO2 generation": {
       "key_value": "Office",
       "variable_name": "Zone Air CO2 Internal Gain Volume Flow Rate",
-      "reporting_frequency": "Timestep"
-    },
-    "Baseboard electrical energy": {
-      "key_value": "Electric baseboard",
-      "variable_name": "Baseboard Electricity Energy",
       "reporting_frequency": "Timestep"
     },
     "Office relative humidity": {
@@ -918,6 +905,21 @@
       "key_value": "Office",
       "variable_name": "Zone Air Heat Balance System Air Transfer Rate",
       "reporting_frequency": "Timestep"
+    },
+    "Heating electrical energy": {
+      "key_value": "Office electric resistance",
+      "variable_name": "Electric Equipment Electricity Energy",
+      "reporting_frequency": "Timestep"
+    },
+    "Heating electrical power": {
+      "key_value": "Office electric resistance",
+      "variable_name": "Electric Equipment Electricity Rate",
+      "reporting_frequency": "Timestep"
+    },
+    "Heating convective power": {
+      "key_value": "Office electric resistance",
+      "variable_name": "Electric Equipment Convective Heating Rate",
+      "reporting_frequency": "Timestep"
     }
   },
   "OutputControl:Files": {
@@ -1097,6 +1099,18 @@
     "Office dual setpoints": {
       "heating_setpoint_temperature_schedule_name": "Heating setpoint",
       "cooling_setpoint_temperature_schedule_name": "Summer cooling setpoint"
+    }
+  },
+  "ElectricEquipment": {
+    "Office electric resistance": {
+      "zone_or_zonelist_or_space_or_spacelist_name": "Office",
+      "schedule_name": "Office heating power fraction",
+      "design_level_calculation_method": "EquipmentLevel",
+      "design_level": 2000,
+      "fraction_latent": 0,
+      "fraction_radiant": 0,
+      "fraction_lost": 0,
+      "end_use_subcategory": "Electric resistance heating"
     }
   }
 }
