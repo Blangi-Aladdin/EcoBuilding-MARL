@@ -1,0 +1,31 @@
+{
+  "model": "models/office_1zone.epJSON",
+  "weather": "models/weather/FRA_BF_Belfort.Fontaine.072960_TMYx.2011-2025.epw",
+  "output": "simulation-outputs/lot1-global-validation",
+  "step_minutes": 15,
+  "history_days": 7,
+  "cooling_setpoint_c": 25,
+  "action_seed": 3651,
+  "occupancy_seed": 42,
+  "cases": {
+    "matrix-summer": {"first": [8, 7], "mode": "matrix"},
+    "matrix-winter": {"first": [12, 17], "mode": "matrix"},
+    "long-summer": {"first": [8, 7], "days": 7, "mode": "long"},
+    "long-winter": {"first": [12, 17], "days": 7, "mode": "long"},
+    "long-autumn": {"first": [10, 9], "days": 7, "mode": "long"},
+    "occupation-B1": {"first": [8, 7], "mode": "occupancy", "profile": "B1"},
+    "occupation-C": {"first": [8, 7], "mode": "occupancy", "profile": "C"},
+    "occupation-D": {"first": [8, 7], "mode": "occupancy", "profile": "D"},
+    "occupation-E": {"first": [8, 7], "mode": "occupancy", "profile": "E", "start_day": "Saturday"},
+    "occupation-F": {"first": [8, 7], "mode": "occupancy", "profile": "F"},
+    "winter-cooling-1": {"first": [1, 27], "mode": "winter-cooling", "level": 1},
+    "winter-cooling-2": {"first": [1, 27], "mode": "winter-cooling", "level": 2},
+    "calendar": {"first": [7, 31], "days": 2},
+    "release": {"first": [8, 7], "mode": "release", "release_after": 60},
+    "transitions": {"first": [8, 7], "mode": "transitions", "all_off_step": 45},
+    "native-before": {"first": [8, 7]},
+    "leave-active": {"first": [8, 7], "mode": "leave-active"},
+    "native-after": {"first": [8, 7]},
+    "native-no-reports": {"first": [8, 7], "output_meter": false, "instrument": false}
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "reference_config": "configs/validation/lot1.json",
+  "output_root": "simulation-outputs/sinergym-runs/qualification",
+  "gym_seed": 42,
+  "physical_tests": {
+    "direct": "tests/integration/test_energyplus.py",
+    "sinergym": "tests/integration/test_sinergym_energyplus.py"
+  },
+  "equivalence": {
+    "cases": {
+      "matrix-summer": {
+        "category": "A",
+        "actions_sha256": "6cad8a4265d63453d83ff0c5be9684e44eaea11afe1dd3b30f27ff51297e7092",
+        "expected_people_sha256": "226180785355c62193cce8e28a8ef57be84ba9038818c9861d603bde4fbe0eed"
+      },
+      "matrix-winter": {
+        "category": "A",
+        "actions_sha256": "6cad8a4265d63453d83ff0c5be9684e44eaea11afe1dd3b30f27ff51297e7092",
+        "expected_people_sha256": "226180785355c62193cce8e28a8ef57be84ba9038818c9861d603bde4fbe0eed"
+      },
+      "long-summer": {
+        "category": "A",
+        "actions_sha256": "f165799a47a75ad93aa54e9ae6b83fdef4284451aaf416247c7180c151e07515",
+        "expected_people_sha256": "b871cae484d5a4f0604370fd6cfe5dae290346540ba4f9185471299f7422a0d8"
+      },
+      "long-winter": {
+        "category": "A",
+        "actions_sha256": "f165799a47a75ad93aa54e9ae6b83fdef4284451aaf416247c7180c151e07515",
+        "expected_people_sha256": "b871cae484d5a4f0604370fd6cfe5dae290346540ba4f9185471299f7422a0d8"
+      },
+      "long-autumn": {
+        "category": "A",
+        "actions_sha256": "f165799a47a75ad93aa54e9ae6b83fdef4284451aaf416247c7180c151e07515",
+        "expected_people_sha256": "b871cae484d5a4f0604370fd6cfe5dae290346540ba4f9185471299f7422a0d8"
+      },
+      "occupation-B1": {
+        "category": "A",
+        "actions_sha256": "3233667984673af3ad87a24cc633bd7d12d6c5bf480e1c4d72897516aaa7aa73",
+        "expected_people_sha256": "9ba808a9167d7955a4d99b0cf55df9260e3d3c3197ea62a8b354d3582e131a3a"
+      },
+      "occupation-C": {
+        "category": "A",
+        "actions_sha256": "3233667984673af3ad87a24cc633bd7d12d6c5bf480e1c4d72897516aaa7aa73",
+        "expected_people_sha256": "5e04ddea936065b8fe1e8e8cd77559879adaafe7c871ed8bbfc0a880d43f4051"
+      },
+      "occupation-D": {
+        "category": "A",
+        "actions_sha256": "3233667984673af3ad87a24cc633bd7d12d6c5bf480e1c4d72897516aaa7aa73",
+        "expected_people_sha256": "559fab54add7045428d1999c48b0e7f8cb04e9fa6dda423bf3748fd811d3b8b5"
+      },
+      "occupation-E": {
+        "category": "A",
+        "actions_sha256": "3233667984673af3ad87a24cc633bd7d12d6c5bf480e1c4d72897516aaa7aa73",
+        "expected_people_sha256": "9e329c5691ed5b2a70b88e81b42cafe28239b05b4c60c55e5ee97df1968ae928"
+      },
+      "occupation-F": {
+        "category": "A",
+        "actions_sha256": "3233667984673af3ad87a24cc633bd7d12d6c5bf480e1c4d72897516aaa7aa73",
+        "expected_people_sha256": "8bffe9e677fce372aa99d29831c41c6e7f9e38eda70802b86fa3d46b1999a0ab"
+      },
+      "winter-cooling-1": {
+        "category": "A",
+        "actions_sha256": "df1b15450503b129c77d4b9b61d174c1ba3ec714c485f5884faac8b10140ba76",
+        "expected_people_sha256": "226180785355c62193cce8e28a8ef57be84ba9038818c9861d603bde4fbe0eed"
+      },
+      "winter-cooling-2": {
+        "category": "A",
+        "actions_sha256": "3fa4375ba5cff551f4fd1df93ea136eeb12b1089e44341c5c8979dd17447985c",
+        "expected_people_sha256": "226180785355c62193cce8e28a8ef57be84ba9038818c9861d603bde4fbe0eed"
+      },
+      "transitions": {
+        "category": "B",
+        "actions_sha256": "4919e918625289c4ee77499de22079e94946306ef7cb4c044f99d49cf6486770",
+        "expected_people_sha256": "226180785355c62193cce8e28a8ef57be84ba9038818c9861d603bde4fbe0eed"
+      },
+      "leave-active": {
+        "category": "A",
+        "actions_sha256": "2787cb920fd6d0872dac8e4e8a1a058eeea8039c35bbd0ff05ac46ffb80ba92c",
+        "expected_people_sha256": "2c3a8b45a09291a4debd70f120d0e8318ab91a1546cd8fdb01177a6e4a05f876"
+      }
+    },
+    "exclusions": {
+      "calendar": "Chronologie exclusivement native, sans action ni surcharge HVAC.",
+      "release": "Libération explicite à la décision 60, suivie d'un contrôle natif.",
+      "native-before": "Fonctionnement natif sans surcharge durant le contrôle.",
+      "native-after": "Retour natif après un autre état actif, sans action de contrôle.",
+      "native-no-reports": "Fonctionnement natif et vérification sans instrumentation ajoutée."
+    },
+    "tolerances": {
+      "abs_tol": 1e-06,
+      "rel_tol": 1e-09,
+      "strict": [
+        "identifiants",
+        "timestamps",
+        "actions",
+        "effectifs",
+        "vitesses",
+        "ordre et nombre de sous-pas",
+        "noms, unités et fréquences des colonnes CSV"
+      ],
+      "precision": "valeurs physiques brutes, tolérances historiques 36.7"
+    }
+  },
+  "weekly_resets": {
+    "actions_algorithm": "24 full permutations and the first 24 vectors of a 25th permutation, Python Random.sample on lexicographic H/C/V",
+    "action_seed": 2027,
+    "actions_csv_sha256": "198e43588769eb9c9c75e0ce93411c2e740cf392229fe1fa59f66e38d3caca88",
+    "episodes": [
+      {
+        "case": "A",
+        "first": [
+          12,
+          17
+        ],
+        "days": 7,
+        "history_days": 7,
+        "start_day": "Monday",
+        "occupancy_mode": "native"
+      },
+      {
+        "case": "B",
+        "first": [
+          8,
+          7
+        ],
+        "days": 7,
+        "history_days": 7,
+        "start_day": "Monday",
+        "occupancy_mode": "native"
+      },
+      {
+        "case": "C",
+        "first": [
+          10,
+          9
+        ],
+        "days": 7,
+        "history_days": 7,
+        "start_day": "Monday",
+        "occupancy_mode": "dynamic",
+        "occupancy_seed": 42
+      },
+      {
+        "case": "D",
+        "first": [
+          10,
+          9
+        ],
+        "days": 7,
+        "history_days": 7,
+        "start_day": "Monday",
+        "occupancy_mode": "dynamic",
+        "occupancy_seed": 42
+      },
+      {
+        "case": "E",
+        "first": [
+          10,
+          9
+        ],
+        "days": 7,
+        "history_days": 7,
+        "start_day": "Monday",
+        "occupancy_mode": "dynamic",
+        "occupancy_seed": 123
+      }
+    ]
+  }
+}

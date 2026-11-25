@@ -9,6 +9,12 @@ Multi-Agent Reinforcement Learning.
 This project aims to optimize building energy consumption
 while maintaining indoor thermal comfort.
 
+## Passation des lots 1 et 2
+
+Le modèle EnergyPlus, l’intégration Sinergym et le MDP sont opérationnels et qualifiés en simulation. Le développement RBC, l’entraînement PPO sur le bureau officiel et le prototype MARL restent à réaliser. La branche de transmission est `feature/lot1-lot2-building-environment`. La référence technique qualifiée est `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`. Lors de la vérification 2.4, le commit documentaire publié était `fe9dbc894bcf7e0cfff85c3303f480a200fd9e06`.
+
+Commencez par le [guide de prise en main](docs/handover/quickstart.md), puis consultez le [rapport de transmission](docs/handover/handover.md) et l’[inventaire des ressources](docs/handover/inventory.md). La [capitalisation technique](docs/handover/technical-knowledge.md) fait partie du référentiel documentaire versionné. Le [rapport de transmission](docs/handover/handover.md#6-décisions-techniques-à-préserver) donne aussi les contrats essentiels à préserver depuis un clone.
+
 ## Technologies
 
 - Python
@@ -30,10 +36,12 @@ while maintaining indoor thermal comfort.
 ## requirement
 
 - Intel PC or AMD 64-bit (`x86_64`), under Windows 11 or Ubuntu supported by Docker Engine. Ubuntu 24.04 LTS is suitable for native Linux use. The target image is `linux/amd64`.
-- On Windows, enable hardware virtualization in the BIOS/UEFI. Docker Desktop requires at least 8 GB of RAM. Allow several GB of free space for the image and build cache on both systems. [Docker Desktop Prerequisites](https://docs.docker.com/cairop/setup/install/windows-install/)
+- On Windows, enable hardware virtualization in the BIOS/UEFI. Docker Desktop requires at least 8 GB of RAM. Allow several GB of free space for the image and build cache on both systems. [Docker Desktop Prerequisites](https://docs.docker.com/desktop/setup/install/windows-install/)
 - Provide access to the GitHub repository and an internet connection for the first build. Docker downloads the base image, Ubuntu packages, EnergyPlus and Python dependencies.
 
 The image Ubuntu 24.04 installs Python, EnergyPlus, Sinergym, Gymnasium, Stable-Baselines3, PyTorch CPU and the Jupyter kernel. No separate installation of these components or dedicated graphics card is required on the PC.
+
+<a name="windows-11-avec-wsl2"></a>
 
 ## Windows 11 with WSL2
 
@@ -63,7 +71,7 @@ In **PowerShell**, with WinGet available:
 winget install --id Docker.DockerDesktop --exact
 ```
 
-You can also use the official installer. Launch Docker Desktop, select the WSL2 engine in **Settings → General** if the option is displayed, then activate **Ubuntu** in **Settings → Resources → WSL Integration** and apply the changes. Use Linux container mode. Docker Desktop provides the `docker` command to Ubuntu via this integration. [Docker Desktop Installation](https://docs.docker.com/cairop/setup/install/windows-install/), [WSL2 Integration](https://docs.docker.com/cairop/features/wsl/)
+You can also use the official installer. Launch Docker Desktop, select the WSL2 engine in **Settings → General** if the option is displayed, then activate **Ubuntu** in **Settings → Resources → WSL Integration** and apply the changes. Use Linux container mode. Docker Desktop provides the `docker` command to Ubuntu via this integration. [Docker Desktop Installation](https://docs.docker.com/desktop/setup/install/windows-install/), [WSL2 Integration](https://docs.docker.com/desktop/features/wsl/)
 
 In the **Ubuntu WSL* terminal** :
 
@@ -101,6 +109,8 @@ code --install-extension ms-toolsai.jupyter
 ```
 
 The repository configuration also installs Python and Jupyter into the container. Continue with the [common steps](#clone-build-and-open-the-project) from **Ubuntu WSL**.
+
+<a name="linux-ubuntu-natif"></a>
 
 ## Linux Ubuntu native
 
@@ -170,6 +180,8 @@ code --install-extension ms-toolsai.jupyter
 
 The official `.deb` package is also available. Continue with the common steps from this same terminal. [Installing VS Code on Linux](https://code.visualstudio.com/docs/setup/linux)
 
+<a name="cloner-construire-et-ouvrir-le-projet"></a>
+
 ## Clone, build, and open the project
 
 Run the following commands in the **Ubuntu WSL* terminal* on Windows or in the **native Ubuntu terminal** on Linux.
@@ -179,13 +191,13 @@ Run the following commands in the **Ubuntu WSL* terminal* on Windows or in the *
 ```bash
 mkdir -p ~/projects
 cd ~/projects
-git clone https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
+git clone --branch feature/lot1-lot2-building-environment https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
 cd EcoBuilding-MARL
 git branch --show-current
 ls -la Dockerfile .devcontainer/devcontainer.json requirements.lock requirements-build.lock
 ```
 
-Expect to see the `main` branch and all four files listed. If the repository is private, use an authorized GitHub account. If the Docker files are missing, check with the group that the branch containing the configuration has been shared before starting the build.
+Before the final merge, the command above explicitly checks out the lots 1 and 2 delivery branch. Expect `feature/lot1-lot2-building-environment` and the four files listed above. Once these lots are integrated into `main`, you can clone with `git clone --branch main https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git` and expect `main`. If access is restricted, use an authorized GitHub account. If the Docker files are missing, check the branch before starting the build.
 
 ### 6. Build the image
 
@@ -227,13 +239,15 @@ python -m jupyter kernelspec list
 
 The expected result is `/opt/venv/bin/python`, Python 3.12.x and a `python3` kernel in `/opt/venv/share/jupyter/kernels`. In a notebook, choose **Select Kernel → Python Environments**, then the container interpreter. In a cell, execute `import sys; print(sys.executable)` and verify that the output is `/opt/venv/bin/python`.
 
+<a name="validation-sur-un-second-ordinateur"></a>
+
 ## Validation on a second computer
 
-The EnergyPlus, Sinergym and PPO image and tests have been validated locally. On another workstation, it remains to confirm GitHub access with the account of a group member, build from a clean clone, Docker permissions under native Ubuntu, reopening in VS Code, and execution of the Jupyter cell. Validate both routes on their respective systems.
+The Docker image, EnergyPlus and Sinergym qualifications, and the MDP have been verified locally. Historical PPO checks are separate from training on the official Sinergym office, which remains to be done. On a second workstation, confirm GitHub access with a group member’s account, access to the qualified technical commit, a build from a clean clone, Docker permissions on native Ubuntu, reopening in VS Code, and execution of the Jupyter cell. Validate each setup on its respective system. [Quickstart checklist](docs/handover/quickstart.md#9-vérifications-restantes-sur-un-second-poste)
 
 ## Local outputs
 
-Launch the simulations from `simulation-outputs/` at the root of the project if you want to keep the results on the PC. This folder and the directories generated by the `Eplus-demo-v1` demo are ignored by Git. Keep local credentials out of the shared repository.
+Run the [quickstart simulation commands](docs/handover/quickstart.md#5-vérifier-puis-lancer-la-simulation) from the repository root. They write to `simulation-outputs/`, which Git ignores, along with the directories generated by the historical `Eplus-demo-v1` demo. Keep local credentials out of the shared repository. A clone contains the versioned protocols and summaries. Obtain the EPW separately from the supplier and request the detailed qualification archives from the group. [Evidence inventory](docs/handover/inventory.md#5-inventaire-des-preuves-de-validation)
 
 ### Dependency updates
 
@@ -254,3 +268,31 @@ uv pip compile requirements-build.in --python-version 3.12 \
 The separate build lock pins setuptools and wheel for `tinynumpy`, which
 is distributed as a source archive. The image uses wheels for the other
 Python dependencies.
+
+## Validation du bureau monozone EnergyPlus
+
+Le code sous `src/ecobuilding/` fournit les commandes HVAC, l’occupation dynamique,
+les observations et le coordinateur des simulations. La validation s’exécute
+avec le modèle principal, l’EPW local et l’image `ecobuilding-marl:dev`.
+
+- [Architecture et conventions de mesure](docs/architecture.md)
+- [Reproduire les tests EnergyPlus](docs/validation.md)
+
+## Environnement Sinergym officiel
+
+Le package `ecobuilding.sinergym_adapter` expose le bureau monozone sous
+l’interface Gymnasium. Le runner EnergyPlus direct reste disponible pour
+régénérer les références. Le modèle et l’EPW Belfort–Fontaine sont communs
+aux deux parcours. [Modèle et météo](models/README.md)
+
+- [Utilisation, configuration JSON et commandes Docker](docs/sinergym-usage.md)
+- [Architecture, contrat temporel, énergie et limites](docs/sinergym-architecture.md)
+- [Tests logiciels, intégration physique et qualification](docs/sinergym-validation.md)
+
+Le MDP est qualifié avec **106 tests unitaires** et cinq épisodes physiques,
+dont un rejeu hivernal exact. Les prochaines étapes définiront les stratégies
+RBC et PPO et leurs comparaisons sur les mêmes manifestes.
+
+- [Contrat MDP, espace d’observation et récompense](docs/mdp.md)
+- [Épisodes Train, Validation et Test](docs/mdp-episodes.md)
+- [Résultats et reproduction de la qualification MDP](docs/mdp-validation.md)
