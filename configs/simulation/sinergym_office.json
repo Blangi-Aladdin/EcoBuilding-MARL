@@ -17,5 +17,6 @@
   "transition_timeout": 15,
   "shutdown_timeout": 10,
   "trace": false,
+  "reward_mode": "legacy_zero",
   "action_blocks": [{"steps": 96, "action": [2, 1, 0]}]
 }

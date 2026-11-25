@@ -14,7 +14,9 @@ from ecobuilding.occupancy import OccupancyManager
 from ecobuilding.occupancy_profiles import generate
 
 from .model import Episode, prepare_episode_inputs
+from .reward import RewardConfig, interval_reward
 from .simulator import EcoBuildingSimulator, ZONE_STEP
+from . import state
 from .transport import Action, EpisodeCancelled, EpisodeError
 
 
@@ -34,18 +36,19 @@ DEFAULT_FIELDS = (
 
 
 class EcoBuildingEnv(gym.Env):
-    """Prototype with one interactive worker and a provisional numeric projection."""
+    """One interactive worker with the MDP state or an explicit field projection."""
 
-    def __init__(self, model_path, weather_path, output_root, episode, *, fields=DEFAULT_FIELDS,
+    def __init__(self, model_path, weather_path, output_root, episode, *, fields=None,
                  cooling_setpoint_c=25, startup_timeout=120, transition_timeout=15,
-                 shutdown_timeout=10, trace=False):
+                 shutdown_timeout=10, trace=False, reward_mode="mdp", reward_config=None):
         super().__init__()
         self.model_path, self.weather_path, self.output_root = map(Path, (model_path, weather_path, output_root))
         if not isinstance(episode, Episode):
             raise TypeError("episode must be an Episode")
         self.episode = episode
-        self.fields = tuple(fields)
-        if not self.fields or any(not isinstance(f, Field) or not f.path or not f.unit for f in self.fields):
+        self.fields = None if fields is None else tuple(fields)
+        if self.fields is not None and (not self.fields or any(
+                not isinstance(f, Field) or not f.path or not f.unit for f in self.fields)):
             raise ValueError("Supply named observation paths with units")
         for timeout in (startup_timeout, transition_timeout, shutdown_timeout):
             if not isfinite(timeout) or timeout <= 0:
@@ -55,8 +58,17 @@ class EcoBuildingEnv(gym.Env):
         self.shutdown_timeout = shutdown_timeout
         self.cooling_setpoint_c = cooling_setpoint_c
         self.trace = trace
+        if reward_mode not in ("mdp", "legacy_zero"):
+            raise ValueError("reward_mode must be mdp or legacy_zero")
+        if reward_config is not None and not isinstance(reward_config, RewardConfig):
+            raise TypeError("reward_config must be a RewardConfig")
+        self.reward_mode = reward_mode
+        self.reward_config = RewardConfig() if reward_config is None else reward_config
+        self._previous_action = None
         self.action_space = gym.spaces.MultiDiscrete([3, 3, 3])
-        self.observation_space = gym.spaces.Box(-np.inf, np.inf, (len(self.fields),), dtype=np.float32)
+        self.observation_space = (state.observation_space() if self.fields is None else
+                                  gym.spaces.Box(-np.inf, np.inf, (len(self.fields),), dtype=np.float32))
+        self._previous_temperature = None
         self._operation = Lock()
         self._lifecycle = Lock()
         self._worker = None
@@ -100,6 +112,7 @@ class EcoBuildingEnv(gym.Env):
                 observation, info = self._project(result)
                 with self._lifecycle:
                     worker.transport.check()
+                    self._remember_temperature(result)
                     self._decision, self._end, self._status = 0, result.end, "ready"
                 return observation, info
             except BaseException as exc:
@@ -130,6 +143,8 @@ class EcoBuildingEnv(gym.Env):
                 if not self.action_space.contains(np.asarray(values)):
                     raise ValueError("Action is outside MultiDiscrete([3,3,3])")
                 decision, start = self._decision, self._end
+                previous_temperature = self._previous_temperature
+                previous_action = self._previous_action
             try:
                 worker.transport.send_action(Action(self._episode_id, decision, values))
                 result = worker.transport.receive_result(self.transition_timeout, worker.worker_alive)
@@ -138,14 +153,19 @@ class EcoBuildingEnv(gym.Env):
                         result.start != start or result.end != start + ZONE_STEP or
                         result.requested != values or result.applied != values or result.last != last):
                     raise EpisodeError(f"Unexpected result for decision {decision}")
-                observation, info = self._project(result)
+                observation, info = self._project(result, previous_temperature)
+                reward = 0.0
+                if self.reward_mode == "mdp":
+                    reward, info["reward"] = interval_reward(result, previous_action, self.reward_config)
                 if last:
                     worker.confirm_exit(self.shutdown_timeout)
                 with self._lifecycle:
                     worker.transport.check()
+                    self._remember_temperature(result)
+                    self._previous_action = result.applied
                     self._decision, self._end = decision + 1, result.end
                     self._status = "finished" if last else "ready"
-                return observation, 0.0, False, last, info
+                return observation, reward, False, last, info
             except BaseException as exc:
                 with self._lifecycle:
                     self._fail(worker, exc)
@@ -166,6 +186,8 @@ class EcoBuildingEnv(gym.Env):
                 self._status = "shutdown-failed"
                 raise
             self._worker = None
+        self._previous_temperature = None
+        self._previous_action = None
         self._status = "closed"
 
     def _fail(self, worker, cause):
@@ -207,17 +229,15 @@ class EcoBuildingEnv(gym.Env):
                 OccupancyManager.fraction(people)
         return episode, profile
 
-    def _project(self, result):
-        values = []
-        for field in self.fields:
-            value = result.physical
-            for key in field.path:
-                if not isinstance(value, dict) or key not in value:
-                    raise EpisodeError(f"Missing observation field {field.path}")
-                value = value[key]
-            if not isinstance(value, (int, float, np.number)) or not isfinite(value):
-                raise EpisodeError(f"Unavailable or nonnumeric observation field {field.path}")
-            values.append(value)
+    def _remember_temperature(self, result):
+        if self.fields is None:
+            self._previous_temperature = state.interval_temperature(result.physical)
+
+    def _project(self, result, previous_temperature=None):
+        if self.fields is None:
+            values = state.state_values(result, previous_temperature)
+        else:
+            values = [state.read_number(result.physical, field.path) for field in self.fields]
         with np.errstate(over="ignore", invalid="ignore"):
             observation = np.asarray(values, dtype=np.float32)
         if not np.isfinite(observation).all() or not self.observation_space.contains(observation):

@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from pyenergyplus.runtime import Runtime
 from sinergym.simulators.eplus import EnergyPlus
-from ecobuilding.sinergym_adapter import EcoBuildingEnv, Episode
+from ecobuilding.sinergym_adapter import DEFAULT_FIELDS, EcoBuildingEnv, Episode
 from ecobuilding.sinergym_adapter.environment import prepare_episode_inputs
 from ecobuilding.sinergym_adapter.simulator import EcoBuildingSimulator
 import gymnasium as gym
@@ -29,6 +29,7 @@ def main():
     if len(sys.argv)>3:
         order=sys.argv[3:]
     env=EcoBuildingEnv(MODEL,EPW,OUT/"sinergym/episodes",Episode((12,17),days=7),
+                       fields=DEFAULT_FIELDS, reward_mode="legacy_zero",
                        cooling_setpoint_c=configuration["cooling_setpoint_c"])
 
 

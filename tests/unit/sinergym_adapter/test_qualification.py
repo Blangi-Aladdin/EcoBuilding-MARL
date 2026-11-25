@@ -18,7 +18,7 @@ import numpy as np
 from stable_baselines3.common.env_checker import check_env as sb3_check
 from sinergym.simulators.eplus import EnergyPlus
 
-from ecobuilding.sinergym_adapter import EcoBuildingEnv, Episode, Field
+from ecobuilding.sinergym_adapter import DEFAULT_FIELDS, EcoBuildingEnv, Episode, Field
 from ecobuilding.sinergym_adapter.model import check_model_changes, prepare_episode_inputs
 from ecobuilding.sinergym_adapter.simulator import EcoBuildingSimulator
 from ecobuilding.sinergym_adapter.transport import EpisodeError, Result
@@ -46,6 +46,8 @@ class Qualification(unittest.TestCase):
         override = patch("ecobuilding.sinergym_adapter.environment.EcoBuildingSimulator", factory)
         override.start()
         self.addCleanup(override.stop)
+        kwargs.setdefault("fields", DEFAULT_FIELDS)
+        kwargs.setdefault("reward_mode", "legacy_zero")
         env = EcoBuildingEnv(MODEL, WEATHER, self.output, episode or Episode((8, 7)), **kwargs)
         self.addCleanup(env.close)
         return env, factory

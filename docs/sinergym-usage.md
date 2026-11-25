@@ -57,33 +57,48 @@ eb python scripts/run_sinergym_episode.py --config configs/simulation/sinergym_o
 | `occupancy_profile` | En mode explicite uniquement, un entier 0, 1 ou 2 par intervalle contrôlé. |
 | `occupancy_seed` | Entier en mode dynamique. Si omis, la seed est issue du RNG Gymnasium. |
 | `cooling_setpoint_c` | Réel fini, 25 °C par défaut. Doit dépasser la consigne maximale de chauffage du gestionnaire (21 °C). |
-| `fields` | Séquence non vide de `Field(path, unit)`, cinq champs par défaut. Le lanceur JSON accepte les cinq champs qualifiés et permet de définir leur sélection et ordre. |
+| `fields` | Omettre ce paramètre pour l’état MDP de 20 dimensions. Passer `DEFAULT_FIELDS` pour la projection historique, ou une séquence non vide de `Field(path, unit)` pour une projection personnalisée en Python. Le JSON de démonstration conserve explicitement les cinq champs historiques. |
 | `startup_timeout`, `transition_timeout`, `shutdown_timeout` | Secondes, valeurs finies et strictement positives. Défauts 120, 15 et 10. |
 | `trace` | Booléen, False par défaut. Active une trace interne en mémoire du simulateur, sans fichier automatique. |
+| `reward_mode` | `mdp` par défaut, ou `legacy_zero` pour les rejeux historiques. Le JSON de démonstration sélectionne explicitement le mode historique. |
+| `reward_config` | Instance de `RewardConfig` en Python ou objet JSON de surcharges partielles. Les plages, le seuil CO₂, les facteurs de normalisation et les poids sont configurables. Exemple JSON `"reward_config": {"occupied_temperature_weight": 3.0}`. |
 | `action_blocks` | Clé du lanceur uniquement. Chaque bloc contient un nombre positif de pas et une action H/C/V. Le total doit couvrir exactement l’épisode. |
 
 Le pas physique reste fixé à quatre pas par heure. Les paramètres internes `episode_id`, `profile` et `_api` du simulateur et l’option `report_facility` du préparateur ne sont pas des paramètres de la façade.
 
-## Exemple Python
+## Exemple Python sur le MDP
 
-À utiliser avec `src/` et EnergyPlus dans `PYTHONPATH`. Cet exemple ferme volontairement après la première action.
+Depuis le dépôt dans le conteneur, avec `PYTHONPATH` configuré comme ci-dessus.
+Le scénario provient du manifeste disponible via le plan officiel. Cet exemple
+exécute une décision puis ferme volontairement l’épisode.
 
 ```python
-from ecobuilding.sinergym_adapter import EcoBuildingEnv, Episode
+from ecobuilding.episodes import EpisodePlan
+from ecobuilding.sinergym_adapter import EcoBuildingEnv, STATE_NAMES
 
+plan = EpisodePlan.load()
+scenario = plan.scenarios("train")[0]
 env = EcoBuildingEnv(
     "models/office_1zone.epJSON",
     "models/weather/FRA_BF_Belfort.Fontaine.072960_TMYx.2011-2025.epw",
     "simulation-outputs/sinergym-runs/example",
-    Episode((1, 27)),
+    scenario.episode,
 )
 try:
-    observation, info = env.reset(seed=42)
-    print(observation, info["end"])
+    observation, info = env.reset(seed=42, options=scenario.reset_options())
+    print(dict(zip(STATE_NAMES, observation, strict=True)), info["end"])
     observation, reward, terminated, truncated, info = env.step([2, 1, 0])
-    print(observation, reward, terminated, truncated, info["end"])
+    print(reward, info["reward"]["weighted"], info["reward"]["constraints"])
 finally:
     env.close()
 ```
 
-[Architecture et contrat](sinergym-architecture.md) · [Validation et qualification](sinergym-validation.md)
+Les scénarios fixes sont disponibles via `plan.scenarios("validation")` et
+`plan.scenarios("test")`. Pour les comparaisons entre agents, charger le même
+fichier via `plan.load_manifest("validation.json")`.
+
+```bash
+eb python -m unittest discover -s tests/unit -v
+```
+
+[Contrat MDP](mdp.md) · [Épisodes et manifestes](mdp-episodes.md) · [Reproduire la qualification physique](mdp-validation.md#reproduire-la-qualification)

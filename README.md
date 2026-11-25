@@ -275,6 +275,10 @@ aux deux parcours. [Modèle et météo](models/README.md)
 - [Architecture, contrat temporel, énergie et limites](docs/sinergym-architecture.md)
 - [Tests logiciels, intégration physique et qualification](docs/sinergym-validation.md)
 
-La suite rapide couvre 73 tests logiciels. Les neuf tests physiques sont
-préparés pour la qualification après migration. Les prochaines étapes portent
-sur cette qualification, puis sur le MDP et les stratégies de contrôle.
+Le MDP est qualifié avec **106 tests unitaires** et cinq épisodes physiques,
+dont un rejeu hivernal exact. Les prochaines étapes définiront les stratégies
+RBC et PPO et leurs comparaisons sur les mêmes manifestes.
+
+- [Contrat MDP, espace d’observation et récompense](docs/mdp.md)
+- [Épisodes Train, Validation et Test](docs/mdp-episodes.md)
+- [Résultats et reproduction de la qualification MDP](docs/mdp-validation.md)

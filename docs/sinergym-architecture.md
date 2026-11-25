@@ -58,21 +58,12 @@ Chaque action contrôle 900 s, soit 96 transitions par jour et 672 par semaine. 
 
 La dernière transition attend la sortie naturelle du worker et son code zéro. `close()` réveille les côtés bloqués et attend la fin du worker avant de détacher les gestionnaires, d’effacer les callbacks et de détruire l’état. Un worker encore actif après délai conserve son état et empêche un reset. Les erreurs remontent avec leur cause lorsqu’elle est disponible. Le calendrier est à quatre pas par heure, sans DST ni année imposée. Les fenêtres traversant une année ou un jour intercalaire potentiel sont rejetées.
 
-## Contrat Gymnasium provisoire
+## Interface Gymnasium
 
-`MultiDiscrete([3, 3, 3])` dans l’ordre Heating, Cooling, Ventilation. Les 27 vecteurs OFF (0), MEDIUM (1), HIGH (2) sont admissibles sans restriction horaire ou saisonnière. Le chauffage et le Cooling peuvent être demandés simultanément. L’activation DX dépend ensuite de la charge.
-
-Le Box non borné projette en `float32` cinq valeurs par défaut, dans cet ordre.
-
-| Champ | Unité et convention |
-|---|---|
-| `indoor.indoor_c` | °C, variable EnergyPlus *Zone Mean Air Temperature* lue au rapport de fin de zone. |
-| `indoor.indoor_rh_pct` | %, humidité relative de fin d’intervalle. |
-| `indoor.co2_ppm` | ppm, concentration de fin d’intervalle. |
-| `occupancy.people` | Personnes, effectif de l’intervalle terminé. |
-| `energy.total_j` | J, somme électrique sur l’intervalle. |
-
-`info` contient les horodatages, actions demandées et appliquées et l’instantané physique complet, dont les diagnostics et les moyennes pondérées RH/CO₂ sur les sous-pas. `reward = 0.0` sert aux vérifications de contrat. `terminated` vaut False. `truncated` vaut True seulement à la fin naturelle confirmée. Un timeout ou un échec technique lève une exception.
+La façade publie l’état MDP et reçoit un vecteur discret de trois commandes.
+Les horodatages, actions demandées et appliquées, mesures brutes et diagnostics
+restent accessibles dans `info`. Le contrat détaillé précise la temporalité,
+la récompense et les modes historiques. [Contrat MDP](mdp.md)
 
 ## Bureau et énergie
 
@@ -86,6 +77,6 @@ Le bilan opérationnel additionne le chauffage électrique, la consommation du s
 
 - Les interfaces privées de Sinergym 3.12.2 et l’ordre des callbacks sont sensibles aux changements de version. Limiter l’usage qualifié à une simulation active par processus. La jointure du worker précède toujours la destruction de son état.
 - La RSS a progressé de 291 à 458 MiB (pic 553) lors des resets hebdomadaires et de 290 à 433 MiB (pic 528) lors des interruptions. La durée de ces campagnes ne permet pas de conclure à une fuite. Un thread OS supplémentaire a été relevé ponctuellement lors de T03-B-1. Le rejeu ciblé est revenu au niveau de référence.
-- La sortie moteur non nulle après la dernière publication a été qualifiée sur doubles. La projection reste non bornée et la façade n’a pas d’EnvSpec.
+- La sortie moteur non nulle après la dernière publication a été qualifiée sur doubles. Certaines dimensions physiques du Box restent ouvertes et la façade n’a pas d’EnvSpec.
 - Les profils d’occupation dynamiques et l’hypothèse de ventilation ne sont pas calibrés sur des mesures réelles. La consigne Cooling reste provisoire. L’humidité est observée. La commande active d’humidité, des fenêtres, des portes et des volets reste à qualifier.
 - Le MDP, une RBC officielle qualifiée, un PPO entraîné sur cette façade et la coordination MARL restent des travaux futurs.

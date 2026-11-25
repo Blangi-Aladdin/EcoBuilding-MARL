@@ -72,7 +72,7 @@ class SinergymEnergyPlusIntegration(unittest.TestCase):
 
     def create_env(self, first=WINTER):
         env = self.env_class(MODEL, WEATHER, self.output, self.episode_class(first),
-                             cooling_setpoint_c=SETPOINT)
+                             cooling_setpoint_c=SETPOINT, reward_mode="legacy_zero")
         self.addCleanup(env.close)
         return env
 
@@ -180,16 +180,19 @@ class SinergymEnergyPlusIntegration(unittest.TestCase):
 
     def test_I05_dynamic_occupancy(self):
         from ecobuilding.occupancy_profiles import generate
+        from ecobuilding.sinergym_adapter import STATE_NAMES
+
+        occupant_index = STATE_NAMES.index("occupant_count")
 
         env = self.create_env()
         initial_vector, initial = self.reset(env, DYNAMIC_OPTIONS)
         expected = generate(SEED, days=1, start_weekday=env.episode.first_weekday)
         previous_vector, previous_info = initial_vector, initial
-        self.assertEqual(initial_vector[3], initial['physical']['occupancy']['people'])
+        self.assertEqual(initial_vector[occupant_index], initial['physical']['occupancy']['people'])
         for index, (vector, info) in enumerate(self.run_actions(env, OCCUPANCY_G, initial)):
             self.assertEqual(previous_info['end'], info['start'])
-            self.assertEqual(previous_vector[3], previous_info['physical']['occupancy']['people'])
-            self.assertEqual(vector[3], expected[index])
+            self.assertEqual(previous_vector[occupant_index], previous_info['physical']['occupancy']['people'])
+            self.assertEqual(vector[occupant_index], expected[index])
             self.assertEqual(info['physical']['occupancy']['people'], expected[index])
             self.assertEqual(set(info), {'kind', 'decision_id', 'start', 'end', 'requested',
                                         'applied', 'controlled', 'last', 'physical'})

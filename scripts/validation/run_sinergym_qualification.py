@@ -107,7 +107,8 @@ def weekly_resets(out, config, reference, actions):
     episodes = config["weekly_resets"]["episodes"]
     write(out / "actions.json", actions)
     env = EcoBuildingEnv(ROOT / reference["model"], ROOT / reference["weather"], out / "engine",
-                         Episode((12, 17), days=7), cooling_setpoint_c=reference["cooling_setpoint_c"])
+                         Episode((12, 17), days=7), reward_mode="legacy_zero",
+                         cooling_setpoint_c=reference["cooling_setpoint_c"])
     trajectory_c = None
     for spec in episodes:
         profile = {"occupancy_mode": spec["occupancy_mode"]}

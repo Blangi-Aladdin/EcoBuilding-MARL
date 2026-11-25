@@ -11,7 +11,7 @@ eb python -m unittest discover -s tests/unit/sinergym_adapter -t tests/unit -v
 eb python -m unittest discover -s tests/unit -v
 ```
 
-39 tests métier, 34 tests logiciels Sinergym et 73 au total. Les checkers Gymnasium et SB3 font partie des 34. Gymnasium signale les deux bornes infinies du Box et l’absence d’EnvSpec. Les doubles exercent notamment la sortie non nulle après le dernier rapport.
+La suite complète compte 106 tests, dont les tests historiques, les 18 régressions du comparateur et les tests du MDP. Les vérificateurs Gymnasium et SB3 sont exécutés sur la projection historique et sur le MDP. Les doubles exercent notamment la sortie non nulle après le dernier rapport. [Résultats de qualification MDP](mdp-validation.md)
 
 ## Niveau 2 — Intégration réelle
 

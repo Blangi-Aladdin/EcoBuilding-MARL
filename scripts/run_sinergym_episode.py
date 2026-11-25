@@ -29,12 +29,12 @@ def relative_path(value):
 def load_config(path):
     from ecobuilding.actions import HVACController
     from ecobuilding.occupancy import OccupancyManager
-    from ecobuilding.sinergym_adapter import DEFAULT_FIELDS, EcoBuildingEnv, Episode
+    from ecobuilding.sinergym_adapter import EcoBuildingEnv, Episode, RewardConfig
 
     config = json.loads(path.read_text(encoding="utf-8"))
     required = {"model_path", "weather_path", "output_root", "episode", "action_blocks"}
     optional = {"seed", "occupancy", "cooling_setpoint_c", "fields",
-                "startup_timeout", "transition_timeout", "shutdown_timeout", "trace"}
+                "startup_timeout", "transition_timeout", "shutdown_timeout", "trace", "reward_mode", "reward_config"}
     if not isinstance(config, dict) or required - config.keys() or config.keys() - required - optional:
         raise ValueError("Missing or unsupported episode configuration keys")
 
@@ -83,20 +83,25 @@ def load_config(path):
             OccupancyManager.fraction(people)
 
     settings = {key: config[key] for key in optional & config.keys()
-                if key not in {"fields", "seed", "occupancy"}}
+                if key not in {"fields", "seed", "occupancy", "reward_config"}}
     if "trace" in settings and type(settings["trace"]) is not bool:
         raise ValueError("trace must be a boolean")
-    for key in settings.keys() - {"trace"}:
+    for key in settings.keys() - {"trace", "reward_mode"}:
         if type(settings[key]) not in (int, float) or not isfinite(settings[key]):
             raise ValueError(f"{key} must be a finite number")
-    fields = list(DEFAULT_FIELDS)
     if "fields" in config:
         if not isinstance(config["fields"], list):
             raise ValueError("fields must be a list")
         fields = [parse_field(item) for item in config["fields"]]
-    if len(set(fields)) != len(fields):
-        raise ValueError("Observation fields must be distinct")
-    settings["fields"] = fields
+        if len(set(fields)) != len(fields):
+            raise ValueError("Observation fields must be distinct")
+        settings["fields"] = fields
+
+    if "reward_config" in config:
+        parameters = config["reward_config"]
+        if not isinstance(parameters, dict):
+            raise ValueError("reward_config must be an object")
+        settings["reward_config"] = RewardConfig(**parameters)
 
     actions = []
     if not isinstance(config["action_blocks"], list):
