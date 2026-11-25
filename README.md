@@ -229,7 +229,7 @@ Le résultat attendu est `/opt/venv/bin/python`, Python 3.12.x et un noyau `pyth
 
 ## Validation sur un second ordinateur
 
-L’image et les essais historiques EnergyPlus, Sinergym et PPO ont été validés localement. L’entraînement PPO sur le bureau Sinergym officiel reste à réaliser. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs.
+L’image et les essais historiques EnergyPlus, Sinergym et PPO ont été validés localement. L’entraînement PPO sur le bureau Sinergym officiel reste à réaliser. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs. Vérifiez aussi que le commit technique est accessible depuis le clone du coéquipier. [Guide de prise en main et vérifications restantes](docs/handover/quickstart.md#9-vérifications-restantes-sur-un-second-poste)
 
 ## Sorties locales
 

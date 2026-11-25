@@ -38,12 +38,13 @@ eb python scripts/validation/run_sinergym_qualification.py --help
 eb python scripts/validation/run_sinergym_qualification.py --validate-only
 ```
 
-Exécuter en 37.2.7.5, après les niveaux 1 et 2.
+Pour rejouer la comparaison officielle après les niveaux 1 et 2.
 
 ```bash
-eb python scripts/validation/run_sinergym_qualification.py --weekly
 eb python scripts/validation/run_sinergym_qualification.py --equivalence
 ```
+
+Le lanceur propose aussi l’option `--weekly` pour reproduire la campagne historique A–E. Cette campagne distincte a été retirée du périmètre final 37.2.7.5.
 
 La campagne hebdomadaire reprend A–E (17 décembre, 7 août et trois fois 9 octobre), les modes d’occupation natif/natif/dynamique, les graines dynamiques 42/42/123 et la séquence exacte de 672 actions CSV. Le script vérifie son empreinte avant exécution, réutilise la même façade, compare C/D, vérifie la sortie et le nettoyage, et enregistre la RSS maximale. Les interruptions et récupérations essentielles sont couvertes par les cas d’intégration. Les injections détaillées, les blocages contrôlés et la mesure approfondie de threads et descripteurs relèvent des protocoles historiques 37.2.5.6 et 37.2.5.7.
 
@@ -51,4 +52,10 @@ Pour l’équivalence, `lot2_sinergym.json` sélectionne les 14 cas et exclut ex
 
 ## Portée des résultats historiques
 
-Les sept campagnes 37.2.5 ont vérifié sur le prototype les commandes HVAC, l’occupation dynamique, les épisodes journaliers et hebdomadaires, les resets, les interruptions et les récupérations. En 37.2.6, 19 scénarios ont été examinés et 14 étaient compatibles. Les cinq exclusions concernent des comportements natifs sans action ou la libération d’actionneurs. La campagne a obtenu l’égalité exacte de 3 072 observations contrôlées, 23 033 sous-pas HVAC, 25 461 lectures du prédicteur DX et l’identité binaire des 14 copies epJSON et 14 CSV. L’équivalence du package officiel reste à démontrer en 37.2.7.5.
+Les sept campagnes 37.2.5 ont vérifié sur le prototype les commandes HVAC, l’occupation dynamique, les épisodes journaliers et hebdomadaires, les resets, les interruptions et les récupérations. En 37.2.6, 19 scénarios ont été examinés et 14 étaient compatibles. Les cinq exclusions concernent des comportements natifs sans action ou la libération d’actionneurs. La campagne a obtenu l’égalité exacte de 3 072 observations contrôlées, 23 033 sous-pas HVAC, 25 461 lectures du prédicteur DX et l’identité binaire des 14 copies epJSON et 14 CSV.
+
+## Qualification finale du package officiel
+
+La phase E de la 37.2.7.5 a confirmé l’équivalence physique exacte entre EnergyPlus direct et le package Sinergym officiel sur les **14 scénarios compatibles**. Les références directes régénérées concordent avec les archives historiques. La campagne couvre **3 072 transitions**, **23 033 sous-pas HVAC** et **25 461 lectures du prédicteur DX**. Les 14 paires de copies epJSON et les 14 paires de CSV natifs sont identiques octet pour octet. Les observations, les commandes et les bilans énergétiques concordent selon les critères historiques, avec les tolérances inchangées. Les cinq scénarios hors contrat restent exclus.
+
+Les neuf tests d’intégration physique ont réussi. Sur l’ensemble de la qualification finale, les 59 exécutions EnergyPlus ont retourné le code 0 et les journaux ne signalent aucun avertissement ni erreur sévère ou fatale. Les preuves détaillées sont conservées localement sous `simulation-outputs/`. [Rapport final, archive locale](../simulation-outputs/lot2-sinergym-prototype/results/37.2.7.5-final-qualification/qualification-simplifiee/README.md) · [Comparaisons et empreintes, archive locale](../simulation-outputs/lot2-sinergym-prototype/results/37.2.7.5-final-qualification/qualification-simplifiee/equivalence-verifiee.json)
