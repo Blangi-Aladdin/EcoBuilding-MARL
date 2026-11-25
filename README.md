@@ -229,7 +229,7 @@ Le résultat attendu est `/opt/venv/bin/python`, Python 3.12.x et un noyau `pyth
 
 ## Validation sur un second ordinateur
 
-L’image et les tests EnergyPlus, Sinergym et PPO ont été validés localement. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs.
+L’image et les essais historiques EnergyPlus, Sinergym et PPO ont été validés localement. L’entraînement PPO sur le bureau Sinergym officiel reste à réaliser. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs.
 
 ## Sorties locales
 
@@ -263,3 +263,18 @@ avec le modèle principal, l’EPW local et l’image `ecobuilding-marl:dev`.
 
 - [Architecture et conventions de mesure](docs/architecture.md)
 - [Reproduire les tests EnergyPlus](docs/validation.md)
+
+## Environnement Sinergym officiel
+
+Le package `ecobuilding.sinergym_adapter` expose le bureau monozone sous
+l’interface Gymnasium. Le runner EnergyPlus direct reste disponible pour
+régénérer les références. Le modèle et l’EPW Belfort–Fontaine sont communs
+aux deux parcours. [Modèle et météo](models/README.md)
+
+- [Utilisation, configuration JSON et commandes Docker](docs/sinergym-usage.md)
+- [Architecture, contrat temporel, énergie et limites](docs/sinergym-architecture.md)
+- [Tests logiciels, intégration physique et qualification](docs/sinergym-validation.md)
+
+La suite rapide couvre 73 tests logiciels. Les neuf tests physiques sont
+préparés pour la qualification après migration. Les prochaines étapes portent
+sur cette qualification, puis sur le MDP et les stratégies de contrôle.
