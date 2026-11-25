@@ -4,7 +4,7 @@
 
 - **Projet** — EcoBuilding-MARL.
 - **Lots** — lot 1, modèle physique EnergyPlus et pilotage direct. Lot 2, intégration Sinergym et MDP pour la commande HVAC.
-- **Branche de référence** — `feature/lot1-building-model`.
+- **Branche de transmission** — [`feature/lot1-lot2-building-environment`](https://github.com/Blangi-Aladdin/EcoBuilding-MARL/tree/feature/lot1-lot2-building-environment).
 - **Commit de référence** — `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`.
 - **Objectif** — permettre aux coéquipiers de retrouver les livrables, de distinguer les preuves accessibles dans Git des archives locales et de préparer les travaux RBC et PPO.
 
@@ -55,7 +55,7 @@ Les résultats MDP caractérisent une séquence pseudo-aléatoire de qualificati
 
 | Priorité | Constat de 38.T.1 | Action restante |
 |---|---|---|
-| **P1 — Accès au commit** | La branche locale ne suit aucune branche distante. Les références distantes visibles dans le clone audité ne permettent pas d’attester la disponibilité du commit sur le serveur. | Fournir aux coéquipiers un accès approuvé au commit ou un export Git, avec son hash complet. |
+| **P1 — Accès au commit** | Lors de l’audit 38.T.1, la branche `feature/lot1-building-model` était locale. Le commit de référence est désormais accessible sur la branche de transmission publiée. | Confirmer l’accès depuis un nouveau clone sur le poste d’un coéquipier. |
 | **P1 — Entrées et environnement** | Un clone ne contient ni l’EPW ni l’image Docker construite. | Confirmer que les destinataires peuvent obtenir l’EPW, vérifier son empreinte et construire ou obtenir l’image. |
 | **P2 — Rapports et preuves** | Les rapports de transmission des deux lots restent à produire. Les preuves finales 36.7 et 37.2.7.5 sont locales. | Préparer la passation et donner accès aux synthèses de qualification. Garder les sorties brutes volumineuses en archive séparée. |
 | **P2 — Comparaison des agents** | Le MDP et les scénarios sont disponibles. Le protocole opérationnel de comparaison RBC/PPO reste à convenir. | Fixer les manifestes communs, les seeds propres aux agents, les métriques et la règle de sélection sur Validation avant l’évaluation sur Test. |

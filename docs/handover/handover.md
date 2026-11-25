@@ -1,7 +1,7 @@
 # Rapport de transmission — Lots 1 et 2
 
 **Projet** — EcoBuilding-MARL\
-**Référence technique** — branche `feature/lot1-building-model`, commit `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`.
+**Référence technique** — [branche des lots 1 et 2](https://github.com/Blangi-Aladdin/EcoBuilding-MARL/tree/feature/lot1-lot2-building-environment), commit `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`.
 
 Ce commit contient le modèle EnergyPlus, l’adaptateur Sinergym et le MDP qualifié. Les résultats chiffrés ci-dessous décrivent leur qualification logicielle et physique en simulation. Les performances des futures stratégies restent à établir. Les liens marqués **archive locale** pointent vers des preuves hors Git.
 

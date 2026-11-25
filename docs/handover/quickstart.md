@@ -37,12 +37,12 @@ docker version
 
 ## 2. Cloner GitHub et retrouver la version qualifiée
 
-Dans le **terminal Ubuntu**, exécutez ces commandes pour un nouveau clone. Le commit technique de référence est `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`, issu de la branche `feature/lot1-building-model`.
+Dans le **terminal Ubuntu**, exécutez ces commandes pour un nouveau clone. Le commit technique de référence est `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`, accessible sur la [branche des lots 1 et 2](https://github.com/Blangi-Aladdin/EcoBuilding-MARL/tree/feature/lot1-lot2-building-environment).
 
 ```bash
 mkdir -p ~/projects
 cd ~/projects
-git clone https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
+git clone --branch feature/lot1-lot2-building-environment https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
 cd EcoBuilding-MARL
 git cat-file -e 'cec22b6a076da718d05f7b2bc1559c3feae9bcd0^{commit}' &&
   git switch --detach cec22b6a076da718d05f7b2bc1559c3feae9bcd0

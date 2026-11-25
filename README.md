@@ -179,13 +179,13 @@ Exécutez les commandes suivantes dans le **terminal Ubuntu WSL** sous Windows o
 ```bash
 mkdir -p ~/projects
 cd ~/projects
-git clone https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
+git clone --branch feature/lot1-lot2-building-environment https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
 cd EcoBuilding-MARL
 git branch --show-current
 ls -la Dockerfile .devcontainer/devcontainer.json requirements.lock requirements-build.lock
 ```
 
-Attendez-vous à voir la branche `main` et les quatre fichiers listés. Si le dépôt est privé, utilisez un compte GitHub autorisé. Si les fichiers Docker sont absents, vérifiez avec le groupe que la branche contenant la configuration a bien été partagée avant de lancer le build.
+Pour les lots 1 et 2, la commande affiche la branche `feature/lot1-lot2-building-environment` et les quatre fichiers listés. Si le dépôt est privé, utilisez un compte GitHub autorisé. Si les fichiers Docker sont absents, vérifiez avec le groupe que la branche contenant la configuration a bien été partagée avant de lancer le build.
 
 ### 6. Construire l’image
 
