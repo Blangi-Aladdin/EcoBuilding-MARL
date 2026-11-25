@@ -3,13 +3,15 @@
 **Projet** — EcoBuilding-MARL\
 **Référence technique** — [branche des lots 1 et 2](https://github.com/Blangi-Aladdin/EcoBuilding-MARL/tree/feature/lot1-lot2-building-environment), commit `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`.
 
-Ce commit contient le modèle EnergyPlus, l’adaptateur Sinergym et le MDP qualifié. Les résultats chiffrés ci-dessous décrivent leur qualification logicielle et physique en simulation. Les performances des futures stratégies restent à établir. Les liens marqués **archive locale** pointent vers des preuves hors Git.
+Lors de la vérification 2.4, le commit documentaire publié était `fe9dbc894bcf7e0cfff85c3303f480a200fd9e06`.
+
+Le commit technique contient le modèle EnergyPlus, l’adaptateur Sinergym et le MDP qualifié. Les résultats chiffrés ci-dessous décrivent leur qualification logicielle et physique en simulation. Les performances des futures stratégies restent à établir. Les liens marqués **archive locale** pointent vers des preuves hors Git.
 
 ## 1. Contexte et objectifs
 
 Le projet étudie le compromis entre consommation électrique, confort thermique et qualité de l’air dans un bureau monozone. Il fournit un banc d’essai où les commandes de chauffage, de refroidissement et de ventilation peuvent être comparées sur des conditions météorologiques et des profils d’occupation reproductibles.
 
-Les deux premiers lots établissent la physique du bureau et le contrat de décision. Les lots suivants développeront et compareront les stratégies de contrôle. [Inventaire des livrables](inventory.md) · [Connaissances scientifiques et techniques](technical-knowledge.md)
+Les deux premiers lots établissent la physique du bureau et le contrat de décision. Les lots suivants développeront et compareront les stratégies de contrôle. [Guide de prise en main](quickstart.md) · [Inventaire des livrables](inventory.md)
 
 ## 2. Architecture générale
 
@@ -52,7 +54,7 @@ Les campagnes vérifient une simulation, un protocole d’intégration et un cal
 |---|---|
 | État et action | Préserver l’ordre de `STATE_NAMES`, les unités, la forme `(20,)` et le type `float32`. L’action est ordonnée Heating, Cooling, Ventilation, avec niveaux 0, 1 et 2. La demande de vitesse DX reste distincte de l’activation effective. |
 | Temporalité et causalité | Un `step` correspond à 900 s. Les mesures intérieures moyennes, l’occupation réelle et l’énergie proviennent de l’intervalle terminé. La récompense utilise la saison de début du pas, y compris au passage à minuit. L’observation représente la fin du pas et ne donne accès à aucun profil futur. |
-| Reset et fin | Sept jours de préparation par épisode de qualification. Les cinq valeurs historiques sont nulles au reset. La première action n’entraîne aucun coût de variation. L’amorçage est exclu de la récompense. Après 672 décisions, la fin naturelle confirmée renvoie `terminated=False` et `truncated=True`. Les violations de confort ne déclenchent pas de fin anticipée. |
+| Reset et fin | Sept jours de préparation par épisode du plan MDP. Les cinq valeurs historiques sont nulles au reset. La première action n’entraîne aucun coût de variation. L’amorçage est exclu de la récompense. Après 672 décisions, la fin naturelle confirmée renvoie `terminated=False` et `truncated=True`. Les violations de confort ne déclenchent pas de fin anticipée. |
 | Cycle de vie et comptabilité | Demander les variables avant le lancement, résoudre les handles par état et attendre le worker avant destruction. Compter l’électricité de chaque poste une seule fois. Le DX inclut déjà son ventilateur. |
 | Reproductibilité et compatibilité | Conserver les fenêtres disjointes entre ensembles, préparation comprise, et le calendrier synthétique. Utiliser les mêmes manifestes d’évaluation pour les futurs agents. Garder `fields=DEFAULT_FIELDS` et `reward_mode="legacy_zero"` pour les rejeux qui s’appuient sur le contrat historique. |
 
@@ -62,7 +64,7 @@ Les plages, seuils, normalisations et poids sont définis dans le contrat MDP et
 
 - Le bureau est simulé en zone bien mélangée. Le sol, l’infiltration, la ventilation, les performances DX et l’occupation synthétique demandent une calibration pour représenter un site réel. L’humidité est observée sans actionneur indépendant et le contrôle dynamique des ouvertures reste à qualifier.
 - Un seul fichier TMYx est utilisé. Les épisodes d’un même ensemble peuvent se chevaucher. L’observation expose une partie de l’état physique et les poids de récompense n’ont pas fait l’objet d’une optimisation par apprentissage.
-- Les callbacks privés de Sinergym et leur ordre restent sensibles à une mise à jour. La RSS à long terme reste à caractériser. Le retour non nul après la dernière publication est couvert par doubles dans cette condition précise. Les trois avertissements Gymnasium connus concernent les bornes infinies du Box et l’absence d’EnvSpec. [Limites et justifications](technical-knowledge.md)
+- Les callbacks privés de Sinergym et leur ordre restent sensibles à une mise à jour. La RSS à long terme reste à caractériser. Le retour non nul après la dernière publication est couvert par doubles dans cette condition précise. Les trois avertissements Gymnasium connus concernent les bornes infinies du Box et l’absence d’EnvSpec. [Limites de l’adaptateur](../sinergym-architecture.md#limites)
 
 ## 8. Travaux restants
 

@@ -44,12 +44,11 @@ mkdir -p ~/projects
 cd ~/projects
 git clone --branch feature/lot1-lot2-building-environment https://github.com/Blangi-Aladdin/EcoBuilding-MARL.git
 cd EcoBuilding-MARL
-git cat-file -e 'cec22b6a076da718d05f7b2bc1559c3feae9bcd0^{commit}' &&
-  git switch --detach cec22b6a076da718d05f7b2bc1559c3feae9bcd0
+git cat-file -e 'cec22b6a076da718d05f7b2bc1559c3feae9bcd0^{commit}'
 git log -1 --oneline
 ```
 
-Si le commit est introuvable ou si GitHub refuse l’accès, arrêtez-vous et demandez au groupe l’accès à la référence de transmission ou un export Git. L’accès au commit depuis un nouveau clone reste à confirmer. Le checkout détaché sert à reproduire la version qualifiée. Les supports de transmission sont à récupérer avec les éléments partagés par le groupe s’ils sont absents de ce checkout.
+Si le commit est introuvable ou si GitHub refuse l’accès, arrêtez-vous et demandez au groupe l’accès à la référence de transmission ou un export Git. Restez sur la branche de transmission pour conserver les guides publiés. Lors de la vérification 2.4, le commit documentaire publié était `fe9dbc894bcf7e0cfff85c3303f480a200fd9e06`. Pour rejouer strictement la version technique qualifiée, utilisez au besoin `git switch --detach cec22b6a076da718d05f7b2bc1559c3feae9bcd0` dans une copie de travail dédiée. Les guides de passation ont été ajoutés après ce commit. La [capitalisation technique](technical-knowledge.md) fait partie du référentiel documentaire versionné. Le [rapport publié](handover.md#6-décisions-techniques-à-préserver) résume les contrats à préserver. Les preuves détaillées sont à récupérer séparément. [Inventaire](inventory.md#5-inventaire-des-preuves-de-validation)
 
 ## 3. Installer l’environnement et préparer la météo
 

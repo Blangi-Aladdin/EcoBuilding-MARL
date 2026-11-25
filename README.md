@@ -9,6 +9,12 @@ Multi-Agent Reinforcement Learning.
 This project aims to optimize building energy consumption
 while maintaining indoor thermal comfort.
 
+## Passation des lots 1 et 2
+
+Le modèle EnergyPlus, l’intégration Sinergym et le MDP sont opérationnels et qualifiés en simulation. Le développement RBC, l’entraînement PPO sur le bureau officiel et le prototype MARL restent à réaliser. La branche de transmission est `feature/lot1-lot2-building-environment`. La référence technique qualifiée est `cec22b6a076da718d05f7b2bc1559c3feae9bcd0`. Lors de la vérification 2.4, le commit documentaire publié était `fe9dbc894bcf7e0cfff85c3303f480a200fd9e06`.
+
+Commencez par le [guide de prise en main](docs/handover/quickstart.md), puis consultez le [rapport de transmission](docs/handover/handover.md) et l’[inventaire des ressources](docs/handover/inventory.md). La [capitalisation technique](docs/handover/technical-knowledge.md) fait partie du référentiel documentaire versionné. Le [rapport de transmission](docs/handover/handover.md#6-décisions-techniques-à-préserver) donne aussi les contrats essentiels à préserver depuis un clone.
+
 ## Technologies
 
 - Python
@@ -229,11 +235,11 @@ Le résultat attendu est `/opt/venv/bin/python`, Python 3.12.x et un noyau `pyth
 
 ## Validation sur un second ordinateur
 
-L’image et les essais historiques EnergyPlus, Sinergym et PPO ont été validés localement. L’entraînement PPO sur le bureau Sinergym officiel reste à réaliser. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs. Vérifiez aussi que le commit technique est accessible depuis le clone du coéquipier. [Guide de prise en main et vérifications restantes](docs/handover/quickstart.md#9-vérifications-restantes-sur-un-second-poste)
+L’image, les qualifications EnergyPlus et Sinergym et le MDP ont été vérifiés localement. Les essais historiques de PPO sont distincts de l’entraînement restant à réaliser sur le bureau Sinergym officiel. Sur un autre poste, il reste à confirmer l’accès GitHub avec le compte d’un membre du groupe, le build depuis un clone propre, les permissions Docker sous Ubuntu natif, la réouverture dans VS Code et l’exécution de la cellule Jupyter. Validez les deux parcours sur leurs systèmes respectifs. Vérifiez aussi que le commit technique est accessible depuis le clone du coéquipier. [Guide de prise en main et vérifications restantes](docs/handover/quickstart.md#9-vérifications-restantes-sur-un-second-poste)
 
 ## Sorties locales
 
-Lancez les simulations depuis `simulation-outputs/` à la racine du projet si vous souhaitez conserver les résultats sur le PC. Ce dossier et les répertoires générés par la démo `Eplus-demo-v1` sont ignorés par Git. Gardez les identifiants locaux hors du dépôt partagé.
+Lancez les commandes du [guide de prise en main](docs/handover/quickstart.md#5-vérifier-puis-lancer-la-simulation) depuis la racine du dépôt. Elles écrivent sous `simulation-outputs/`, ignoré par Git. Un clone contient les protocoles et les synthèses versionnées. Récupérez séparément l’EPW auprès du fournisseur et demandez au groupe les archives nécessaires à la vérification des preuves détaillées. [Inventaire des preuves](docs/handover/inventory.md#5-inventaire-des-preuves-de-validation)
 
 ### Dependency updates
 
