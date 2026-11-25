@@ -36,7 +36,7 @@ Commencez par le [guide de prise en main](docs/handover/quickstart.md), puis con
 ## requirement
 
 - Intel PC or AMD 64-bit (`x86_64`), under Windows 11 or Ubuntu supported by Docker Engine. Ubuntu 24.04 LTS is suitable for native Linux use. The target image is `linux/amd64`.
-- On Windows, enable hardware virtualization in the BIOS/UEFI. Docker Desktop requires at least 8 GB of RAM. Allow several GB of free space for the image and build cache on both systems. [Docker Desktop Prerequisites](https://docs.docker.com/cairop/setup/install/windows-install/)
+- On Windows, enable hardware virtualization in the BIOS/UEFI. Docker Desktop requires at least 8 GB of RAM. Allow several GB of free space for the image and build cache on both systems. [Docker Desktop Prerequisites](https://docs.docker.com/desktop/setup/install/windows-install/)
 - Provide access to the GitHub repository and an internet connection for the first build. Docker downloads the base image, Ubuntu packages, EnergyPlus and Python dependencies.
 
 The image Ubuntu 24.04 installs Python, EnergyPlus, Sinergym, Gymnasium, Stable-Baselines3, PyTorch CPU and the Jupyter kernel. No separate installation of these components or dedicated graphics card is required on the PC.
@@ -71,7 +71,7 @@ In **PowerShell**, with WinGet available:
 winget install --id Docker.DockerDesktop --exact
 ```
 
-You can also use the official installer. Launch Docker Desktop, select the WSL2 engine in **Settings → General** if the option is displayed, then activate **Ubuntu** in **Settings → Resources → WSL Integration** and apply the changes. Use Linux container mode. Docker Desktop provides the `docker` command to Ubuntu via this integration. [Docker Desktop Installation](https://docs.docker.com/cairop/setup/install/windows-install/), [WSL2 Integration](https://docs.docker.com/cairop/features/wsl/)
+You can also use the official installer. Launch Docker Desktop, select the WSL2 engine in **Settings → General** if the option is displayed, then activate **Ubuntu** in **Settings → Resources → WSL Integration** and apply the changes. Use Linux container mode. Docker Desktop provides the `docker` command to Ubuntu via this integration. [Docker Desktop Installation](https://docs.docker.com/desktop/setup/install/windows-install/), [WSL2 Integration](https://docs.docker.com/desktop/features/wsl/)
 
 In the **Ubuntu WSL* terminal** :
 
