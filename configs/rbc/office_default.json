@@ -1,0 +1,10 @@
+{
+  "heating_hysteresis_c": 0.5,
+  "high_heating_offset_c": 1.5,
+  "cooling_hysteresis_c": 0.5,
+  "high_cooling_offset_c": 1.5,
+  "occupied_low_co2_ppm": 800.0,
+  "occupied_low_co2_exit_ppm": 700.0,
+  "occupied_high_co2_ppm": 1000.0,
+  "occupied_high_co2_exit_ppm": 900.0
+}

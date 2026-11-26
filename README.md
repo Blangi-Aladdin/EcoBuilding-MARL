@@ -296,3 +296,4 @@ RBC et PPO et leurs comparaisons sur les mêmes manifestes.
 - [Contrat MDP, espace d’observation et récompense](docs/mdp.md)
 - [Épisodes Train, Validation et Test](docs/mdp-episodes.md)
 - [Résultats et reproduction de la qualification MDP](docs/mdp-validation.md)
+- [Contrôleur RBC saisonnier et évaluation](docs/rbc.md)

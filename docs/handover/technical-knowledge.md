@@ -131,7 +131,11 @@ La validation logicielle du MDP (38.8.4) a obtenu **106/106 tests**, avec succè
 
 ## 7. Contrat de reprise pour le lot 3
 
-Le lot 3 pourra lire l’observation initiale, choisir un triplet Heating/Cooling/Ventilation à partir des données alors disponibles, appeler `step`, puis journaliser les mesures et la récompense du pas terminé. Le contrôleur peut être testé sur les mêmes scénarios que les futurs agents. Les règles de décision RBC restent à définir dans le lot 3. [Exemple de boucle et de fermeture](quickstart.md#7-piloter-le-mdp-et-préparer-les-scénarios-pour-les-agents)
+Le lot 3 fournit maintenant une stratégie RBC saisonnière à hystérésis.
+Elle lit l’observation initiale, choisit un triplet Heating/Cooling/Ventilation
+à partir des données disponibles, appelle `step`, puis journalise les mesures
+et la récompense du pas terminé. Elle peut être testée sur les mêmes scénarios
+que les futurs agents. [Contrôleur RBC](../rbc.md) · [Exemple de boucle et de fermeture](quickstart.md#7-piloter-le-mdp-et-préparer-les-scénarios-pour-les-agents)
 
 | Interface | Rôle, conditions et précautions | Code |
 |---|---|---|
